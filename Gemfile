@@ -18,7 +18,6 @@ gem 'formtastic-bootstrap'
 gem 'valid_email'
 gem 'devise'
 gem 'bootstrap-datepicker-rails'
-gem 'sqlite3'
 
 group :development, :test do
   gem 'byebug',  '9.0.6', platform: :mri
