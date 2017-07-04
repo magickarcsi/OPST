@@ -1,0 +1,17 @@
+<% @hourlysummary.each do |store| %>
+<td>
+<div class="well well-sm">
+    
+    <h4><%= store["store"] %></h4>
+    <h6><strong>Current hour</strong></h6>
+    <br/>
+    <p>OEPE:<strong> <%= store["averageOEPETiming"].chomp("000")%></strong></p>
+    <p>Cars:<strong> <%= store["carCount"]%></p></strong>
+        <% store["sensorsSummary"].each do |sensor| %>
+            <p><%= sensor["sensorName"] %>: <strong><%= sensor["averageTime"].chomp('000') %> </strong>Ratio: <strong><%= sensor["targetAchievedRatio"] %>%</strong></p>
+        <% end %>
+    
+    </div>
+</div>
+</td>
+<% end %>

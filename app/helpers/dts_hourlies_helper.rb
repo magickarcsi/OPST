@@ -1,0 +1,2 @@
+module DtsHourliesHelper
+end

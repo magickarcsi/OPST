@@ -1,0 +1,33 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  hour: MyString
+  cars: MyString
+  COD1: MyString
+  COD2: MyString
+  Cashier: MyString
+  Presenter: MyString
+  OE-PE: MyString
+  AST: MyString
+  TAR_COD1: MyString
+  TAR_COD2: MyString
+  TAR_Cashier: MyString
+  TAR_Presenter: MyString
+  TAR_OE-PE: MyString
+  TAR_AST: MyString
+
+two:
+  hour: MyString
+  cars: MyString
+  COD1: MyString
+  COD2: MyString
+  Cashier: MyString
+  Presenter: MyString
+  OE-PE: MyString
+  AST: MyString
+  TAR_COD1: MyString
+  TAR_COD2: MyString
+  TAR_Cashier: MyString
+  TAR_Presenter: MyString
+  TAR_OE-PE: MyString
+  TAR_AST: MyString

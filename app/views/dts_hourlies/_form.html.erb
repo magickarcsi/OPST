@@ -1,0 +1,145 @@
+<%= form_for @dts_hourly, :html => { :class => "form-horizontal dts_hourly" } do |f| %>
+
+  <% if @dts_hourly.errors.any? %>
+    <div id="error_expl" class="panel panel-danger">
+      <div class="panel-heading">
+        <h3 class="panel-title"><%= pluralize(@dts_hourly.errors.count, "error") %> prohibited this dts_hourly from being saved:</h3>
+      </div>
+      <div class="panel-body">
+        <ul>
+        <% @dts_hourly.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+  <div class="form-group">
+    <%= f.label :date, :class => 'control-label col-lg-2' %>
+    <div class="col-lg-10">
+      <%= f.date_field :date, :placeholder => 'yyyy-mm-dd', :class => 'form-control', 'data-behaviour' => 'datepicker' %>
+    </div>
+    <%=f.error_span(:date) %>
+  </div>
+  <script>
+  $("#dts_hourly_date").datepicker({
+        format: "yyyy-mm-dd",
+        weekStart: 1,
+        maxViewMode: 2,
+        todayBtn: "linked",
+        language: "en-GB",
+        daysOfWeekHighlighted: "0,6",
+        calendarWeeks: true,
+        autoclose: true,
+        todayHighlight: true
+    });
+    $("#dts_hourly_datestring").value();
+  </script>
+  <div class="form-group">
+    <%= f.label :hour, :class => 'control-label col-lg-2' %>
+    <div class="col-lg-10">
+      <%= f.text_field :hour, :class => 'form-control' %>
+    </div>
+    <%=f.error_span(:hour) %>
+  </div>
+  <div class="form-group">
+    <%= f.label :cars, :class => 'control-label col-lg-2' %>
+    <div class="col-lg-10">
+      <%= f.text_field :cars, :class => 'form-control' %>
+    </div>
+    <%=f.error_span(:cars) %>
+  </div>
+  <div class="form-group">
+    <%= f.label :COD1, :class => 'control-label col-lg-2' %>
+    <div class="col-lg-10">
+      <%= f.text_field :COD1, :class => 'form-control' %>
+    </div>
+    <%=f.error_span(:COD1) %>
+  </div>
+  <div class="form-group">
+    <%= f.label :COD2, :class => 'control-label col-lg-2' %>
+    <div class="col-lg-10">
+      <%= f.text_field :COD2, :class => 'form-control' %>
+    </div>
+    <%=f.error_span(:COD2) %>
+  </div>
+  <div class="form-group">
+    <%= f.label :Cashier, :class => 'control-label col-lg-2' %>
+    <div class="col-lg-10">
+      <%= f.text_field :Cashier, :class => 'form-control' %>
+    </div>
+    <%=f.error_span(:Cashier) %>
+  </div>
+  <div class="form-group">
+    <%= f.label :Presenter, :class => 'control-label col-lg-2' %>
+    <div class="col-lg-10">
+      <%= f.text_field :Presenter, :class => 'form-control' %>
+    </div>
+    <%=f.error_span(:Presenter) %>
+  </div>
+  <div class="form-group">
+    <%= f.label :OEPE, :class => 'control-label col-lg-2' %>
+    <div class="col-lg-10">
+      <%= f.text_field :OEPE, :class => 'form-control' %>
+    </div>
+    <%=f.error_span(:OEPE) %>
+  </div>
+  <div class="form-group">
+    <%= f.label :AST, :class => 'control-label col-lg-2' %>
+    <div class="col-lg-10">
+      <%= f.text_field :AST, :class => 'form-control' %>
+    </div>
+    <%=f.error_span(:AST) %>
+  </div>
+  <div class="form-group">
+    <%= f.label :TAR_COD1, :class => 'control-label col-lg-2' %>
+    <div class="col-lg-10">
+      <%= f.text_field :TAR_COD1, :class => 'form-control' %>
+    </div>
+    <%=f.error_span(:TAR_COD1) %>
+  </div>
+  <div class="form-group">
+    <%= f.label :TAR_COD2, :class => 'control-label col-lg-2' %>
+    <div class="col-lg-10">
+      <%= f.text_field :TAR_COD2, :class => 'form-control' %>
+    </div>
+    <%=f.error_span(:TAR_COD2) %>
+  </div>
+  <div class="form-group">
+    <%= f.label :TAR_Cashier, :class => 'control-label col-lg-2' %>
+    <div class="col-lg-10">
+      <%= f.text_field :TAR_Cashier, :class => 'form-control' %>
+    </div>
+    <%=f.error_span(:TAR_Cashier) %>
+  </div>
+  <div class="form-group">
+    <%= f.label :TAR_Presenter, :class => 'control-label col-lg-2' %>
+    <div class="col-lg-10">
+      <%= f.text_field :TAR_Presenter, :class => 'form-control' %>
+    </div>
+    <%=f.error_span(:TAR_Presenter) %>
+  </div>
+  <div class="form-group">
+    <%= f.label :TAR_OEPE, :class => 'control-label col-lg-2' %>
+    <div class="col-lg-10">
+      <%= f.text_field :TAR_OEPE, :class => 'form-control' %>
+    </div>
+    <%=f.error_span(:TAR_OEPE) %>
+  </div>
+  <div class="form-group">
+    <%= f.label :TAR_AST, :class => 'control-label col-lg-2' %>
+    <div class="col-lg-10">
+      <%= f.text_field :TAR_AST, :class => 'form-control' %>
+    </div>
+    <%=f.error_span(:TAR_AST) %>
+  </div>
+
+  <div class="form-group">
+    <div class="col-lg-offset-2 col-lg-10">
+      <%= f.submit nil, :class => 'btn btn-primary' %>
+      <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                dts_hourlies_path, :class => 'btn btn-default' %>
+    </div>
+  </div>
+
+<% end %>

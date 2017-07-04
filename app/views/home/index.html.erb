@@ -1,0 +1,30 @@
+<%= flash_messages %>
+<div class="col-sm-3">
+  <%= render "layouts/side" %>
+</div>
+<table><tr>
+  <%= render "layouts/side2" %>
+</tr></table>
+<div class="col-sm-3">
+    <div class="well well-sm">
+        <h3>DTS - Dashboard</h3>
+        <p>You can access the DTS Dashboard here.</p>
+        <%= link_to "DTS", dts_path, :class => 'btn btn-info' %>
+    </div>
+</div>     
+<div class="col-sm-3">
+    <div class="well well-sm">
+        <h3>People</h3>
+        <p>You can access all the users here.</p>
+        <%= link_to "People", people_path, :class => 'btn btn-default' %>
+    </div>
+</div>
+<% if current_person.try(:admin?) %>
+<div class="col-sm-3">
+    <div class="well well-sm">
+        <h3>Stores</h3>
+        <p>You can access all the stores here.</p>
+        <%= link_to "Stores", people_path, :class => 'btn btn-default' %>
+    </div>
+</div>
+<% end %>

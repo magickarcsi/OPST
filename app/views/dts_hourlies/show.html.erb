@@ -1,0 +1,49 @@
+<%- model_class = DtsHourly -%>
+<div class="page-header">
+  <h1><%=t '.title', :default => model_class.model_name.human.titleize %></h1>
+</div>
+
+<dl class="dl-horizontal">
+  <dt><strong><%= model_class.human_attribute_name(:date) %>:</strong></dt>
+  <dd><%= @dts_hourly.date %></dd>
+  <dt><strong>Date:</strong></dt>
+  <dd><%= @dts_hourly.datestring %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:hour) %>:</strong></dt>
+  <dd><%= @dts_hourly.hour %>:00</dd>
+  <dt><strong><%= model_class.human_attribute_name(:cars) %>:</strong></dt>
+  <dd><%= @dts_hourly.cars %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:COD1) %>:</strong></dt>
+  <dd><%= @dts_hourly.COD1 %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:COD2) %>:</strong></dt>
+  <dd><%= @dts_hourly.COD2 %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:Cashier) %>:</strong></dt>
+  <dd><%= @dts_hourly.Cashier %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:Presenter) %>:</strong></dt>
+  <dd><%= @dts_hourly.Presenter %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:OEPE) %>:</strong></dt>
+  <dd><%= @dts_hourly.OEPE %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:AST) %>:</strong></dt>
+  <dd><%= @dts_hourly.AST %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:TAR_COD1) %>:</strong></dt>
+  <dd><%= @dts_hourly.TAR_COD1 %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:TAR_COD2) %>:</strong></dt>
+  <dd><%= @dts_hourly.TAR_COD2 %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:TAR_Cashier) %>:</strong></dt>
+  <dd><%= @dts_hourly.TAR_Cashier %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:TAR_Presenter) %>:</strong></dt>
+  <dd><%= @dts_hourly.TAR_Presenter %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:TAR_OEPE) %>:</strong></dt>
+  <dd><%= @dts_hourly.TAR_OEPE %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:TAR_AST) %>:</strong></dt>
+  <dd><%= @dts_hourly.TAR_AST %></dd>
+</dl>
+
+<%= link_to t('.back', :default => t("helpers.links.back")),
+              dts_hourlies_path, :class => 'btn btn-default'  %>
+<%= link_to t('.edit', :default => t("helpers.links.edit")),
+              edit_dts_hourly_path(@dts_hourly), :class => 'btn btn-default' %>
+<%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+              dts_hourly_path(@dts_hourly),
+              :method => 'delete',
+              :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+              :class => 'btn btn-danger' %>

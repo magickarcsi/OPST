@@ -1,0 +1,17 @@
+
+<div class="well well-sm">
+        <h4>Daily Ranking</h4>
+            <br/>
+            <h5>Top 3</h5>
+            <% @dailyranking["items"].each_with_index do |item, index| %>
+                <p>
+                <% if index.equal?(3) %>
+                <hr/>
+                <h5>Group</h5>
+                <% end %>
+                <%= item["rankingPosition"] %>: <strong><%=item["storeName"]%></strong><br/>
+                Rolling hour AST: <strong><%= item["averageASTForLastHour"].chomp("000") %></strong><br/>
+                Current hour AST: <strong><%= item["hourAverageAST"].chomp("000") %> </strong>Ratio: <strong><%=item["hourTargetAchievedRatioAST"]%>%</strong><br/>
+                </p>
+            <% end %>
+        </div>
