@@ -153,8 +153,7 @@ production:
         - ds047315.mlab.com:47315
       options:
         read:
-          mode: :primary
           max_pool_size: 5
-          user: opst_tracker
-          password: opst_tracker
+          user: user
+          password: password
           auth_mech: :scram
