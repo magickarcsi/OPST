@@ -111,6 +111,7 @@ GEM
     nokogiri (1.8.0)
       mini_portile2 (~> 2.2.0)
     orm_adapter (0.5.0)
+    pg (0.20.0)
     puma (3.9.1)
     rack (2.0.3)
     rack-test (0.6.3)
@@ -214,6 +215,7 @@ DEPENDENCIES
   less-rails
   listen
   mongoid
+  pg (= 0.20.0)
   puma
   rails
   sass-rails
