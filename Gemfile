@@ -18,6 +18,7 @@ gem 'formtastic-bootstrap'
 gem 'valid_email'
 gem 'devise'
 gem 'bootstrap-datepicker-rails'
+gem 'sqlite3', '1.3.13'
 
 group :development, :test do
   gem 'sqlite3', '1.3.13'
