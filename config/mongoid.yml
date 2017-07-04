@@ -152,7 +152,6 @@ production:
       hosts:
         - ds047315.mlab.com:47315
       options:
-        read:
           max_pool_size: 5
           user: user
           password: password
