@@ -14,9 +14,51 @@ class DtsHourliesController < ApplicationController
   def show
   end
 
+  def url_hourly(businessUnitId)
+    return URI("https://dtld-poc.appspot.com/_ah/api/dtldapi/v1/drivethrudashboard/hourlysummary?businessUnitId=#{businessUnitId}&withDbUpdate=2")
+  end
+
+  def dts_post
+    businessUnitId = params[:businessUnitId]
+    url_hourlysummary = URI("https://dtld-poc.appspot.com/_ah/api/dtldapi/v1/drivethrudashboard/hourlysummary?businessUnitId=#{businessUnitId}&withDbUpdate=2")
+    url_daily = URI("https://dtld-poc.appspot.com/_ah/api/dtldapi/v1/drivethrudashboard/dailyranking?businessUnitId=#{businessUnitId}")
+    
+    http = Net::HTTP.new(url_daily.host, url_daily.port)
+    http.use_ssl = true
+    http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+
+    http2 = Net::HTTP.new(url_hourlysummary.host, url_hourlysummary.port)
+    http2.use_ssl = true
+    http2.verify_mode = OpenSSL::SSL::VERIFY_NONE
+
+    #response_hourlysummary = http.request(Net::HTTP::Get.new(url_hourlysummary))
+    response_daily = http.request(Net::HTTP::Get.new(url_daily))
+    
+    @hourlysummary = Array[]
+    stores = Array[]
+    storenames = Array[]
+    
+    daily = JSON.parse(response_daily.read_body)
+    daily["items"].each_with_index do |item,index|
+      if index>2
+      stores.push(item["businessUnitId"])
+      storenames.push(item["storeName"])
+      end
+    end
+    for i in 0..stores.length-1
+      url = url_hourly(stores[i])
+      response_hourly = http2.request(Net::HTTP::Get.new(url))
+      resp = JSON.parse(response_hourly.read_body)
+      resp["store"] = storenames[i]
+      @hourlysummary.push(resp)
+    end
+    
+    @dailyranking = daily
+
+    end
   def dts
     businessUnitId = current_person[:store]
-    url = URI("https://dtld-poc.appspot.com/_ah/api/dtldapi/v1/drivethrudashboard/hourlysummary?businessUnitId=#{businessUnitId}&withDbUpdate=2")
+    url = url_hourly(businessUnitId)
     url2 = URI("https://dtld-poc.appspot.com/_ah/api/dtldapi/v1/drivethrudashboard/dailyranking?businessUnitId=#{businessUnitId}")
     url4 = URI("https://dtld-poc.appspot.com/_ah/api/dtldapi/v1/drivethrudashboard/hourlysummary?businessUnitId=0858&withDbUpdate=2")
     url3 = URI("https://dtld-poc.appspot.com/_ah/api/dtldapi/v1/drivethrudashboard/hourlysummary?businessUnitId=0771&withDbUpdate=2")

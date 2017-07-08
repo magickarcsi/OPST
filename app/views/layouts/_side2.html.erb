@@ -1,4 +1,6 @@
+<% if @hourlysummary != nil %>
 <% @hourlysummary.each do |store| %>
+    <% if store["averageOEPETiming"] != nil %>
 <td>
 <div class="well well-sm">
     
@@ -14,4 +16,10 @@
     </div>
 </div>
 </td>
+<% else %>
+<td> <%= store %> </td>
+<% end %>
+<% end %>
+<% else %>
+<td> No stores can be displayed </td>
 <% end %>
