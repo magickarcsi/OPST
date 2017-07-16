@@ -1,25 +1,31 @@
-<% if @hourlysummary != nil %>
-<% @hourlysummary.each do |store| %>
-    <% if store["averageOEPETiming"] != nil %>
-<td>
-<div class="well well-sm">
+<% if @hourlysummary.nil? != true %>
+<% if @hourlysummary[0].nil? != true %>
     
-    <h4><%= store["store"] %></h4>
-    <h6><strong>Current hour</strong></h6>
-    <br/>
-    <p>OEPE:<strong> <%= store["averageOEPETiming"].chomp("000")%></strong></p>
-    <p>Cars:<strong> <%= store["carCount"]%></p></strong>
-        <% store["sensorsSummary"].each do |sensor| %>
-            <p><%= sensor["sensorName"] %>: <strong><%= sensor["averageTime"].chomp('000') %> </strong>Ratio: <strong><%= sensor["targetAchievedRatio"] %>%</strong></p>
+        <% if @hourlysummary[0]['error'] != true%>
+            <% @hourlysummary.each_with_index do |store,index| %>
+                <td>
+                <div class="well well-sm" style="height = 100%;">
+                    
+                    <h4><%= store["store"] %></h4>
+                    <h6><strong>Current hour</strong></h6>
+                    <br/>
+                    <p>OEPE:<strong> <%= store["averageOEPETiming"].chomp("000")%></strong></p>
+                    <p>Cars:<strong> <%= store["carCount"]%></p></strong>
+                        <% store["sensorsSummary"].each do |sensor| %>
+                            <p><%= sensor["sensorName"] %>: <strong><%= sensor["averageTime"].chomp('000') %> </strong>Ratio: <strong><%= sensor["targetAchievedRatio"] %>%</strong></p>
+                        <% end %>
+                    
+                    </div>
+                </div>
+                </td>
+                <% if ((index+1)%3 == 0) %>
+                </tr><tr>
+                <% end %>
+            <% end %>
+        <% else %>
+            <td><div class="well well-sm" style="margin: auto !important; border-left: 6px solid orange !important;"><h5> <p><strong>Error</strong></p><%= @hourlysummary[0]["message"] %> </h5></div></td>
         <% end %>
-    
-    </div>
-</div>
-</td>
-<% else %>
-<td> <%= store %> </td>
-<% end %>
 <% end %>
 <% else %>
-<td> No stores can be displayed </td>
-<% end %>
+            <td><div class="well well-sm" style="margin: auto !important; border-left: 6px solid orange !important;"><h5> <p><strong>Error</strong></p><%= @hourlysummary["message"] %> </h5></div></td>
+        <% end %>

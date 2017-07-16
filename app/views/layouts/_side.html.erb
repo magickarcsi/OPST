@@ -1,4 +1,5 @@
 
+<% if (@dailyranking != nil) %>
 <div class="well well-sm">
         <h4>Daily Ranking</h4>
             <br/>
@@ -13,5 +14,7 @@
                 Rolling hour AST: <strong><%= item["averageASTForLastHour"].chomp("000") %></strong><br/>
                 Current hour AST: <strong><%= item["hourAverageAST"].chomp("000") %> </strong>Ratio: <strong><%=item["hourTargetAchievedRatioAST"]%>%</strong><br/>
                 </p>
+            <% end %>
+            <% else %>
             <% end %>
         </div>
