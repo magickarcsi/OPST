@@ -156,3 +156,4 @@ production:
           user: user
           password: password
           auth_mech: :scram
+          raise_not_found_error: false
