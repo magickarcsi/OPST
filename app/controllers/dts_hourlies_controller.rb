@@ -18,6 +18,17 @@ class DtsHourliesController < ApplicationController
     return URI("https://dtld-poc.appspot.com/_ah/api/dtldapi/v1/drivethrudashboard/hourlysummary?businessUnitId=#{businessUnitId}&withDbUpdate=2")
   end
 
+  def url_reportdata(storeId, date, dayPart, reportType)
+    if (dayPart == nil)
+      dayPart = "Full"
+    end
+    if (reportType == nil)
+      reportType = "Daily"
+    end
+    return URI("https://dtld-poc.appspot.com/_ah/api/dtldapi/v1/reporting/getreportdata?storeId=#{storeId}&businessDay=#{date}&dayPart=#{dayPart}&reportType=#{reportType}")
+
+  end
+
   def dts_post
     if (params[:businessUnitId] != nil)
       @@businessUnitId = params[:businessUnitId]
@@ -120,8 +131,42 @@ class DtsHourliesController < ApplicationController
         @hourlysummary.push(respo)
         @dailyranking = nil
     end
-    url = URI("https://dtld-poc.appspot.com/_ah/api/dtldapi/v1/reporting/getreportdata?storeId=0610&businessDay=2017-07-02&dayPart=Full&reportType=Daily")
+  end
 
+  def dts_hourlies_live
+    @@businessUnitId = current_person[:store]
+    if (params[:storeId] != nil && params[:storeId] != "" )
+      @storeid = params[:storeId]
+      data = JSON.parse(reportdata(@storeid, Time.now.to_date, "Full", "Daily")["result"])
+      data = Hash[ data.collect {|k,v| [k.to_i, v] } ]
+      @reportdata = data.sort
+      stringstore = @storeid.to_s
+      respon = JSON.parse('{"error" : false }')
+      respon["store"] = stringstore
+      respon["date"] = Time.now.to_date
+      @info = respon
+    else
+      @storeid = @@businessUnitId
+      data = JSON.parse(reportdata(@@businessUnitId, Time.now.to_date, "Full", "Daily")["result"])
+      data = Hash[ data.collect {|k,v| [k.to_i, v] } ]
+      @reportdata = data.sort
+      stringstore = @@businessUnitId.to_s
+      respon = JSON.parse('{"error" : false }')
+      respon["store"] = stringstore
+      respon["date"] = Time.now.to_date
+      @info = respon
+    end
+    
+    @reportdata.each_with_index do |hour,index|
+      @dtshourly = DtsHourly.new(date: Time.now.to_date, hour: hour[0].to_i, cars: hour[1]["Cars"].to_i, COD1: hour[1]["COD 1"].to_i, COD2: hour[1]["COD 2"].to_i, Cashier: hour[1]["Cashier"].to_i, Presenter: hour[1]["Presenter"].to_i, OEPE: hour[1]["OE-PE"].to_i, AST: hour[1]["AST"].to_i, TAR_COD1: hour[1]["TAR_COD 1"].to_i, TAR_COD2: hour[1]["TAR_COD 2"].to_i, TAR_Cashier: hour[1]["TAR_Cashier"].to_i, TAR_Presenter: hour[1]["TAR_Presenter"].to_i, TAR_OEPE: hour[1]["TAR_OE-PE"].to_i, TAR_AST: hour[1]["TAR_AST"].to_i, datestring: Time.now.to_date, storeId: @@businessUnitId.to_s)
+      if (DtsHourly.find_by(datestring: Time.now.to_date.to_s, hour: hour[0].to_i) == nil)
+        @dtshourly.save
+      end
+    end
+  end
+  
+  def reportdata(storeId, date, dayPart, reportType)
+    url = url_reportdata(storeId, date, dayPart, reportType)
     http = Net::HTTP.new(url.host, url.port)
     http.use_ssl = true
     http.verify_mode = OpenSSL::SSL::VERIFY_NONE
@@ -130,9 +175,9 @@ class DtsHourliesController < ApplicationController
     request["cache-control"] = 'no-cache'
 
     response = http.request(request)
-    @reportdata = JSON.parse(response.read_body)
+    data = JSON.parse(response.read_body)
+    return data
   end
-  
 
   # GET /dts_hourlies/new
   def new
@@ -196,6 +241,6 @@ class DtsHourliesController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def dts_hourly_params
       params['dts_hourly']['datestring'] = params['dts_hourly']['date']
-      params.require(:dts_hourly).permit(:date, :datestring, :hour, :cars, :COD1, :COD2, :Cashier, :Presenter, :OEPE, :AST, :TAR_COD1, :TAR_COD2, :TAR_Cashier, :TAR_Presenter, :TAR_OEPE, :TAR_AST)
+      params.require(:dts_hourly).permit(:date, :datestring, :hour, :cars, :COD1, :COD2, :Cashier, :Presenter, :OEPE, :AST, :TAR_COD1, :TAR_COD2, :TAR_Cashier, :TAR_Presenter, :TAR_OEPE, :TAR_AST, :storeId)
     end
 end
