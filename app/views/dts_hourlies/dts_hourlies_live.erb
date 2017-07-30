@@ -1,16 +1,17 @@
 <%= flash_messages %>
 <h3>DTS - Hourlies Live  </h3>
-<div class="well well-sm">
+
 <h4><strong> Store: </strong><%= @info["store"] %> <strong>Date: </strong> <%= @info["date"]%></h4>
 <p>
 Please enter 4 digit restaurant number. Ie: 0610 or 1074 <br/>
-<%= form_tag({controller: "dts_hourlies", action: "dts"}, method: "get") do %>
+<%= form_tag({controller: "dts_hourlies", action: "dts_hourlies_live"}, method: "get") do %>
 <div class="form-group">
     <%= text_field_tag :storeId %>
     <%= submit_tag "Go" %>
   </div>
   <% end %>
 </p>
+<div class="well well-sm">
 <table class="table table-hover table-responsive" style="width: 100%; font-size: smaller">
 <% if @reportdata[0][1]["COD 2"] == nil %>
   <thead><th>Hour</th><th>COD 1</th><th>COD 1 %</th><th>HHOT</th><th>HHOT %</th><th>Cashier</th><th>Cashier %</th><th> Presenter</th>

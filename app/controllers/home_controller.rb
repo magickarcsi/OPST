@@ -8,45 +8,73 @@ class HomeController < ApplicationController
 
   def mission
   end
+
+  def url_hourly(businessUnitId)
+    return URI("https://dtld-poc.appspot.com/_ah/api/dtldapi/v1/drivethrudashboard/hourlysummary?businessUnitId=#{businessUnitId}&withDbUpdate=2")
+  end
+
+  def url_reportdata(storeId, date, dayPart, reportType)
+    if (dayPart == nil)
+      dayPart = "Full"
+    end
+    if (reportType == nil)
+      reportType = "Daily"
+    end
+    return URI("https://dtld-poc.appspot.com/_ah/api/dtldapi/v1/reporting/getreportdata?storeId=#{storeId}&businessDay=#{date}&dayPart=#{dayPart}&reportType=#{reportType}")
+
+  end
+
   
   def index
-    businessUnitId = current_person[:store]
-    url = URI("https://dtld-poc.appspot.com/_ah/api/dtldapi/v1/drivethrudashboard/hourlysummary?businessUnitId=#{businessUnitId}&withDbUpdate=2")
-    url2 = URI("https://dtld-poc.appspot.com/_ah/api/dtldapi/v1/drivethrudashboard/dailyranking?businessUnitId=#{businessUnitId}")
-    url4 = URI("https://dtld-poc.appspot.com/_ah/api/dtldapi/v1/drivethrudashboard/hourlysummary?businessUnitId=0858&withDbUpdate=2")
-    url3 = URI("https://dtld-poc.appspot.com/_ah/api/dtldapi/v1/drivethrudashboard/hourlysummary?businessUnitId=0771&withDbUpdate=2")
-    
-    http = Net::HTTP.new(url.host, url.port)
-    http.use_ssl = true
-    http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+    if (current_person[:store] != nil)
+    @@businessUnitId = current_person[:store]
+      url_hourlysummary = url_hourly(@@businessUnitId)
+      url_daily = URI("https://dtld-poc.appspot.com/_ah/api/dtldapi/v1/drivethrudashboard/dailyranking?businessUnitId=#{@@businessUnitId}")
+      
+      http = Net::HTTP.new(url_daily.host, url_daily.port)
+      http.use_ssl = true
+      http.verify_mode = OpenSSL::SSL::VERIFY_NONE
 
-    http2 = Net::HTTP.new(url2.host, url2.port)
-    http2.use_ssl = true
-    http2.verify_mode = OpenSSL::SSL::VERIFY_NONE
-    
-    request = Net::HTTP::Get.new(url)
-    request["cache-control"] = 'no-cache'
-    
-    request2 = Net::HTTP::Get.new(url2)
-    request2["cache-control"] = 'no-cache'
+      http2 = Net::HTTP.new(url_hourlysummary.host, url_hourlysummary.port)
+      http2.use_ssl = true
+      http2.verify_mode = OpenSSL::SSL::VERIFY_NONE
 
-    response = http.request(request)
-    response2 = http.request(request2)
-    response3 = http.request(Net::HTTP::Get.new(url3))
-    response4 = http.request(Net::HTTP::Get.new(url4))
-    @hourlysummary = Array[]
-    fraddon = JSON.parse(response.read_body)
-    fraddon["store"] = "Fraddon (610)"
-    newquay = JSON.parse(response4.read_body)
-    newquay["store"] = "Newquay (858)"
-    newtonabbot = JSON.parse(response3.read_body)
-    newtonabbot["store"] = "Newton Abbot (771)"
-    @hourlysummary.push(fraddon)
-    @hourlysummary.push(newtonabbot)
-    @hourlysummary.push(newquay)
-    
-    @dailyranking = JSON.parse(response2.read_body)
-
+      response_daily = http.request(Net::HTTP::Get.new(url_daily))
+      
+      @hourlysummary = Array[]
+      stores = Array[]
+      storenames = Array[]
+      if response_daily.read_body != nil
+        daily = JSON.parse(response_daily.read_body)
+        daily["items"].each_with_index do |item,index|
+          if index>2
+          stores.push(item["businessUnitId"])
+          storenames.push(item["storeName"])
+          end
+        end
+        for i in 0..stores.length-1
+          url = url_hourly(stores[i])
+          response_hourly = http2.request(Net::HTTP::Get.new(url))
+          resp = JSON.parse(response_hourly.read_body)
+          resp["store"] = storenames[i]
+          resp["error"] = false
+          @hourlysummary.push(resp)
+        end
+      else
+        stringling = "Store #{@@businessUnitId} is not configured."
+        respo = JSON.parse('{"error" : true }')
+        respo["message"] = stringling
+        @hourlysummary.push(respo)
+      end
+      @dailyranking = daily
+    else
+        @hourlysummary = Array[]
+        stringling = "Store number not supplied."
+        respo = JSON.parse('{"error" : true }')
+        respo["message"] = stringling
+        @hourlysummary.push(respo)
+        @dailyranking = nil
+    end
   end
 
 end

@@ -83,6 +83,6 @@ end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def person_params
-      params.require(:person).permit(:id, :firstname, :lastname, :email, :encrypted_password, :store, :nameid, :enabled, :active, :admin)
+      params.require(:person).permit(:id, :firstname, :lastname, :email, :password, :store, :nameid, :enabled, :active, :admin)
     end
 end

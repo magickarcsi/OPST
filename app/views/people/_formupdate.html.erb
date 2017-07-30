@@ -64,7 +64,7 @@
     <div class="col-lg-10">
       <%= f.text_field :nameid,
       :class => 'form-control',
-      :readonly => !@person.admin %>
+      :readonly => !current_person.admin %>
     </div>
     <%=f.error_span(:nameid) %>
   </div>
@@ -73,7 +73,7 @@
     <div class="col-lg-10">
       <%= f.check_box :active,
       :class => 'inline-checkbox',
-      :disabled => !@person.admin %>
+      :disabled => !current_person.admin %>
     </div>
     <%=f.error_span(:active) %>
   </div>
@@ -82,7 +82,7 @@
     <div class="col-lg-10">
       <%= f.check_box :enabled,
       :class => 'inline-checkbox',
-      :disabled => !@person.admin %>
+      :disabled => !current_person.admin %>
     </div>
     <%=f.error_span(:enabled) %>
   </div>
@@ -91,7 +91,7 @@
     <div class="col-lg-10">
       <%= f.check_box :admin,
       :class => 'inline-checkbox',
-      :disabled => !@person.admin %>
+      :disabled => !current_person.admin %>
     </div>
     <%=f.error_span(:admin) %>
   </div>
