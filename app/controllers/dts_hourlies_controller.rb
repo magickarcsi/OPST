@@ -144,44 +144,113 @@ class DtsHourliesController < ApplicationController
         @dailyranking = nil
     end
   end
-
-  def dts_hourlies_live
+  def dts_hourlies_live_do
     @@businessUnitId = current_person[:store]
-    if (params[:storeId] != nil && params[:storeId] != "" )
-      @storeid = params[:storeId]
-      data = JSON.parse(reportdata(@storeid, Time.now.to_date, "Full", "Daily")["result"])
-      data = Hash[ data.collect {|k,v| [k.to_i, v] } ]
-      @reportdata = data.sort
-      stringstore = @storeid.to_s
-      respon = JSON.parse('{"error" : false }')
-      respon["store"] = stringstore
-      respon["date"] = Time.now.to_date
-      @info = respon
+    if (params[:storeId] != nil && params[:storeId] != "")
+      if (params[:date] != nil && params[:date] != "")
+        @storeid = params[:storeId]
+        @date = Time.parse(params[:date])
+        @response = reportdata(@storeid, @date, "Full", "Daily")
+        if @response["success"] == true
+          data = JSON.parse(@response["result"])
+          data = Hash[ data.collect {|k,v| [k.to_i, v] } ]
+          @reportdata = data.sort
+          stringstore = @storeid.to_s
+          respon = JSON.parse('{"error" : false }')
+          respon["store"] = stringstore
+          respon["date"] = @date.to_date
+          @info = respon
+        else
+          respon = JSON.parse('{"error" : true }')
+          respon["store"] = stringstore
+          respon["date"] = @date.to_date
+          respon["message"] = @response["result"]
+          @info = respon
+        end
+      else
+        @storeid = params[:storeId]
+        @date = Time.now
+        @response = reportdata(@storeid, @date, "Full", "Daily")
+        if @response["success"] == true
+          data = JSON.parse(@response["result"])
+          data = Hash[ data.collect {|k,v| [k.to_i, v] } ]
+          @reportdata = data.sort
+          stringstore = @storeid.to_s
+          respon = JSON.parse('{"error" : false }')
+          respon["store"] = stringstore
+          respon["date"] = @date.to_date
+          @info = respon
+        else
+          respon = JSON.parse('{"error" : true }')
+          respon["store"] = stringstore
+          respon["date"] = @date.to_date
+          respon["message"] = @response["result"]
+          @info = respon
+        end
+      end
     else
-      @storeid = @@businessUnitId
-      data = JSON.parse(reportdata(@storeid, Time.now.to_date, "Full", "Daily")["result"])
-      data = Hash[ data.collect {|k,v| [k.to_i, v] } ]
-      @reportdata = data.sort
-      stringstore = @@businessUnitId.to_s
-      respon = JSON.parse('{"error" : false }')
-      respon["store"] = stringstore
-      respon["date"] = Time.now.to_date
-      @info = respon
+      if (params[:date] != nil && params[:date] != "")
+        @storeid = @@businessUnitId
+        @date = Time.parse(params[:date])
+        @response = reportdata(@storeid, @date, "Full", "Daily")
+        if @response["success"] == true
+          data = JSON.parse(@response["result"])
+          data = Hash[ data.collect {|k,v| [k.to_i, v] } ]
+          @reportdata = data.sort
+          stringstore = @@businessUnitId.to_s
+          respon = JSON.parse('{"error" : false }')
+          respon["store"] = stringstore
+          respon["date"] = @date.to_date
+          @info = respon
+        else
+          respon = JSON.parse('{"error" : true }')
+          respon["store"] = stringstore
+          respon["date"] = @date.to_date
+          respon["message"] = @response["result"]
+          @info = respon
+        end
+      else
+        @storeid = @@businessUnitId
+        @date = Time.now
+        @response = reportdata(@storeid, @date, "Full", "Daily")
+        if @response["success"] == true
+          data = JSON.parse(@response["result"])
+          data = Hash[ data.collect {|k,v| [k.to_i, v] } ]
+          @reportdata = data.sort
+          stringstore = @@businessUnitId.to_s
+          respon = JSON.parse('{"error" : false }')
+          respon["store"] = stringstore
+          respon["date"] = @date.to_date
+          @info = respon
+        else
+          respon = JSON.parse('{"error" : true }')
+          respon["store"] = stringstore
+          respon["date"] = @date.to_date
+          respon["message"] = @response["result"]
+          @info = respon
+        end
+      end
+    end
+    if @reportdata != nil
+      @reportdata.each_with_index do |hour,index|
+        if (hour[1]["COD 2"] == nil)
+          @dtshourly = DtsHourly.new(date: Time.now.to_date, hour: hour[0].to_i, cars: hour[1]["Cars"].to_i, COD1: hour[1]["COD 1"].to_i, HHOT: hour[1]["HHOT"].to_i, Cashier: hour[1]["Cashier"].to_i, Presenter: hour[1]["Presenter"].to_i, OEPE: hour[1]["OE-PE"].to_i, AST: hour[1]["AST"].to_i, TAR_COD1: hour[1]["TAR_COD 1"].to_i, TAR_HHOT: hour[1]["TAR_HHOT"].to_i, TAR_Cashier: hour[1]["TAR_Cashier"].to_i, TAR_Presenter: hour[1]["TAR_Presenter"].to_i, TAR_OEPE: hour[1]["TAR_OE-PE"].to_i, TAR_AST: hour[1]["TAR_AST"].to_i, datestring: Time.now.to_date, storeId: @storeid.to_s)
+        
+        end
+        if (hour[1]["HHOT"] == nil)
+          @dtshourly = DtsHourly.new(date: Time.now.to_date, hour: hour[0].to_i, cars: hour[1]["Cars"].to_i, COD1: hour[1]["COD 1"].to_i, COD2: hour[1]["COD 2"].to_i, Cashier: hour[1]["Cashier"].to_i, Presenter: hour[1]["Presenter"].to_i, OEPE: hour[1]["OE-PE"].to_i, AST: hour[1]["AST"].to_i, TAR_COD1: hour[1]["TAR_COD 1"].to_i, TAR_COD2: hour[1]["TAR_COD 2"].to_i, TAR_Cashier: hour[1]["TAR_Cashier"].to_i, TAR_Presenter: hour[1]["TAR_Presenter"].to_i, TAR_OEPE: hour[1]["TAR_OE-PE"].to_i, TAR_AST: hour[1]["TAR_AST"].to_i, datestring: Time.now.to_date, storeId: @storeid.to_s)
+
+        end
+        if (DtsHourly.find_by(datestring: Time.now.to_date.to_s, hour: hour[0].to_i, storeId: @storeid.to_s) == nil)
+          @dtshourly.save
+        end
+      end
     end
     
-    @reportdata.each_with_index do |hour,index|
-      if (hour[1]["COD 2"] == nil)
-        @dtshourly = DtsHourly.new(date: Time.now.to_date, hour: hour[0].to_i, cars: hour[1]["Cars"].to_i, COD1: hour[1]["COD 1"].to_i, HHOT: hour[1]["HHOT"].to_i, Cashier: hour[1]["Cashier"].to_i, Presenter: hour[1]["Presenter"].to_i, OEPE: hour[1]["OE-PE"].to_i, AST: hour[1]["AST"].to_i, TAR_COD1: hour[1]["TAR_COD 1"].to_i, TAR_HHOT: hour[1]["TAR_HHOT"].to_i, TAR_Cashier: hour[1]["TAR_Cashier"].to_i, TAR_Presenter: hour[1]["TAR_Presenter"].to_i, TAR_OEPE: hour[1]["TAR_OE-PE"].to_i, TAR_AST: hour[1]["TAR_AST"].to_i, datestring: Time.now.to_date, storeId: @storeid.to_s)
-      
-      end
-      if (hour[1]["HHOT"] == nil)
-        @dtshourly = DtsHourly.new(date: Time.now.to_date, hour: hour[0].to_i, cars: hour[1]["Cars"].to_i, COD1: hour[1]["COD 1"].to_i, COD2: hour[1]["COD 2"].to_i, Cashier: hour[1]["Cashier"].to_i, Presenter: hour[1]["Presenter"].to_i, OEPE: hour[1]["OE-PE"].to_i, AST: hour[1]["AST"].to_i, TAR_COD1: hour[1]["TAR_COD 1"].to_i, TAR_COD2: hour[1]["TAR_COD 2"].to_i, TAR_Cashier: hour[1]["TAR_Cashier"].to_i, TAR_Presenter: hour[1]["TAR_Presenter"].to_i, TAR_OEPE: hour[1]["TAR_OE-PE"].to_i, TAR_AST: hour[1]["TAR_AST"].to_i, datestring: Time.now.to_date, storeId: @storeid.to_s)
-
-      end
-      if (DtsHourly.find_by(datestring: Time.now.to_date.to_s, hour: hour[0].to_i, storeId: @storeid.to_s) == nil)
-        @dtshourly.save
-      end
-    end
+  end
+  
+  def dts_hourlies_live
+    
   end
   
   def reportdata(storeId, date, dayPart, reportType)
