@@ -1,12 +1,64 @@
 require 'uri'
 require 'net/http'
 require "json"
+require "bson"
 class HomeController < ApplicationController
-
+  before_action :require_admin, only: [:setup]
   # You can leave the mission method blank, it will render
   # the corresponding static_pages/mission.html.erb by default
+  def setup_dp_do
+    params.permit(:change)
+    @stores = ["0335","0610","0771","0858","1098","1330"]
+    if params[:change] == 1
+      @change = true
+    elsif params[:change] == 0
+      @change = false
+    else
+      @change = false
+    end
+    @daypart_str = Array[]
+    @daypart_str[1] = "Overnight"
+    @daypart_str[2] = "Open"
+    @daypart_str[3] = "Dayshift"
+    @daypart_str[4] = "Evening"
+    @dp_def = Hash[]
+    @stores.each do |store|
+      dp_defi = Array[]
+      for i in 1..4 do
+        dp = Dayparts.find_by(storeId: store, daypart_num: i)
+        dp_defi.push(dp)
+      end
+      @dp_def[store] = dp_defi
+    end
+  end
 
-  def mission
+  def setup
+    @daypart_str = Array[]
+    @daypart_str[1] = "Overnight"
+    @daypart_str[2] = "Open"
+    @daypart_str[3] = "Dayshift"
+    @daypart_str[4] = "Evening"
+    @stores = ["0335","0610","0771","0858","1098","1330"]
+    @store_names = {"0335" => "Torquay 1", "0610" => "Fraddon","0771" => "Newton Abbot","0858" => "Newquay" ,"1098" => "Torquay - Hele Road", "1330" => "Paignton"}
+    @bm_names = Hash[] #{"0335" => "Torquay 1", "0610" => "","0771" => "","0858" => "" ,"1098" => "", "1330" => ""}
+    @dp_def = Hash[]
+    @stores.each do |store|
+      person = Person.find_by(store: store, position: "Business Manager")
+      if person != nil
+        @bm_names[store] = person
+      else
+        @bm_names[store] = nil
+      end
+      dp_defi = Array[]
+      for i in 1..4 do
+        dp = Dayparts.find_by(storeId: store, daypart_num: i)
+        if dp == nil
+          dp = Dayparts.new(storeId: store, daypart_num: i, start: nil, end: nil, open: false)
+        end
+        dp_defi.push(dp)
+      end
+      @dp_def[store] = dp_defi
+    end
   end
 
   def url_hourly(businessUnitId)
@@ -77,4 +129,12 @@ class HomeController < ApplicationController
     end
   end
 
+  private
+    def require_admin
+       redirect_to(:root, alert: 'Access Denied.') && return if current_person.try(:admin?) != true
+    end
+    def log(event)
+      ev = Activity.new(uid: current_person.id, event: event, storeId: current_person.store, timestamp: Time.now)
+      ev.save
+    end
 end

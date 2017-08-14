@@ -1,7 +1,7 @@
 
 <% if @info["error"] == false %>
-  <div class="well well-sm"><h4><strong> Store: </strong><%= @info["store"] %> <strong>Date: </strong> <%= @info["date"]%></h4>
-    <table class="table table-hover table-responsive" style="width: 100%; font-size: smaller">
+  <div class="well well-sm" style="width: 90%;"><h4><strong> Store: </strong><%= @info["store"] %> <strong>Date: </strong> <%= @info["date"]%></h4>
+    <table class="table table-hover table-responsive" style="font-size: x-small">
     <% if @reportdata[0][1]["COD 2"] == nil %>
     <thead><th>Hour</th><th>COD 1</th><th>COD 1 %</th><th>HHOT</th><th>HHOT %</th><th>Cashier</th><th>Cashier %</th><th> Presenter</th>
     <th>Presenter %</th><th>AST</th><th>AST %</th><th>OEPE</th><th>OEPE %</th><th>Cars</th></thead><tbody>

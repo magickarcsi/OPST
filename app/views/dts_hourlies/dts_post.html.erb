@@ -2,20 +2,13 @@
 <h3>DTS - Dashboard</h3>
 <p>
 Please enter 4 digit restaurant number. Ie: 0610 or 1074 <br/>
-<%= form_tag({controller: "dts_hourlies", action: "dts_post"}, method: "get") do %>
+<%= form_tag({controller: "dts_hourlies", action: "dts_do"}, method: "get", remote: true) do %>
 <div class="form-group">
     <%= text_field_tag :businessUnitId %>
     <%= submit_tag "Go" %>
   </div>
   <% end %>
 </p>
-<div class="col-sm-3">
-<%= render "layouts/side" %>
+<div id="dash">
 </div>
-<table>
-<tr>
-<%= render "layouts/side2" %>
-</tr>
-</table>
-
 

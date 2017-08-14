@@ -17,11 +17,19 @@
       <% if person_signed_in? %>
         <li class="active"><a href="#">UK-<%= current_person.store %> <span class="sr-only">(current)</span></a></li>
       <% if current_person.try(:admin?) %>
-        <li><%= link_to "Setup", people_path %></li>
+        <li><%= link_to "Setup", setup_url %></li>
       <% end %> 
         <li><%= link_to "People", people_path %></li>
-        <li><%= link_to "DTS Dashboard", dts_path %></li>
-        <li><%= link_to "DTS Hour Live", dts_hourlies_live_path %></li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">DTS<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            
+                <li><%= link_to "DTS Dashboard", dts_path%></a></li>
+                <li><%= link_to "DTS Daypart", daypart_url %></li>
+                <li><%= link_to "DTS Hour Live", dts_hourlies_live_path %></li>
+                <li><%= link_to "DTS Hourlies", dts_hourlies_path %></li>
+          </ul>
+        </li>
       <% end %>  
       </ul>
       

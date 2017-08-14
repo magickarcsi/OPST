@@ -1,0 +1,14 @@
+<%= flash_messages %>
+<h3>DTS - Dashboard</h3>
+<p>
+Please enter 4 digit restaurant number. Ie: 0610 or 1074 <br/>
+<%= form_tag({controller: "dts_hourlies", action: "dts_do"}, method: "get", remote: true) do %>
+<div class="form-group">
+    <%= text_field_tag :businessUnitId %>
+    <%= submit_tag "Go", data: { disable_with: "Loading..." } %>
+  </div>
+  <% end %>
+</p>
+<div id="dash">
+</div>
+

@@ -1,0 +1,33 @@
+<h4><strong>Store: </strong><%= @storeId%> <strong>Date: </strong><%=@date%> <strong>Daypart: </strong><%=@daypart_str[@daypart_num.to_i]%></h4>
+  <% if @return[0] != nil %>
+    <table id="table" class="table table-hover table-responsive" style="font-size: small; width: 25%">
+      <thead>
+        <tr>
+          <td><strong>Hour </strong></td>
+          <td><strong>AST </strong></td>
+          <td><strong>OEPE </strong></td>
+          <td><strong>Cars </strong></td>
+        </tr>
+      </thead>
+      <tbody>
+        <% @return.each do |item| %>
+          <tr>
+            <td><%= item.hour %>:00 - <%= item.hour+1 %>:00</td>
+            <td><%= item.AST %></td>
+            <td><%= item.OEPE %></td>
+            <td><%= item.cars %></td>
+          </tr>
+        <% end %>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td><strong>Sum: </strong></td>
+          <td><strong><%=@avg_ast%></strong></td>
+          <td><strong><%=@avg_oepe%></strong></td>
+          <td><strong><%=@cars%></strong></td>
+        </tr>
+      </tfoot>
+    </table>
+  <% else %>
+    <div class="well well-sm" style="margin: auto !important; border-left: 6px solid orange !important;"><h5> <p><strong>Error</strong></p>No information available for the given period.</h5><br/><p><samp><%= @storeId%>.<%=@date%>.<%=@daypart_str[@daypart_num.to_i]%></samp></p></div>
+  <% end %>

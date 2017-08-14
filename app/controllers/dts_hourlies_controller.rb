@@ -26,6 +26,96 @@ class DtsHourliesController < ApplicationController
   def show
   end
 
+  def daypart_do
+    @daypart_arr = Array[]
+    @daypart_str = Array[]
+    @daypart_str[1] = "Overnight"
+    @daypart_str[2] = "Open"
+    @daypart_str[3] = "Dayshift"
+    @daypart_str[4] = "Evening"
+    if (params[:storeId] != "" && params[:storeId] != nil)
+      @storeId = params[:storeId]
+    else
+      @storeId = "0000"
+    end
+    if (params[:date] != "" && params[:date] != nil)
+      @date = params[:date]
+    else
+      @date = "1960-01-01"
+    end
+    if (params[:daypart] != "" && params[:daypart] != nil)
+      @daypart_num = params[:daypart]
+    end
+    case @daypart_num.to_i
+      when 1 #overnight
+        @data = Dayparts.find_by(storeId: @storeId, daypart_num: 1)
+        if @data == nil
+          @daypart_arr[0] = 0
+          @daypart_arr[1] = 5
+        else
+          @daypart_arr[0] = @data.start
+          @daypart_arr[1] = @data.end
+        end
+        
+      when 2 #open
+        @data = Dayparts.find_by(storeId: @storeId, daypart_num: 2)
+        if @data == nil
+          @daypart_arr[0] = 6
+          @daypart_arr[1] = 6
+        else
+          @daypart_arr[0] = @data.start
+          @daypart_arr[1] = @data.end
+        end
+      when 3 #dayshift
+        @data = Dayparts.find_by(storeId: @storeId, daypart_num: 3)
+        if @data == nil
+          @daypart_arr[0] = 7
+          @daypart_arr[1] = 15
+        else
+          @daypart_arr[0] = @data.start
+          @daypart_arr[1] = @data.end
+        end
+      when 4 #evening
+        @data = Dayparts.find_by(storeId: @storeId, daypart_num: 4)
+        if @data == nil
+          @daypart_arr[0] = 16
+          @daypart_arr[1] = 23
+        else
+          @daypart_arr[0] = @data.start
+          @daypart_arr[1] = @data.end
+        end
+      else
+        
+        @daypart_arr[0] = 24
+        @daypart_arr[1] = 24
+    end
+    array = Array[]
+    @ast = 0
+    @oepe = 0
+    @avg_ast = 0.0
+    @avg_oepe = 0.0
+    @cars = 0
+    log("Daypart read: (#{@storeId}) #{@date} #{@daypart_str[@daypart_num.to_i]}")
+    DtsHourly.where(storeId: @storeId, datestring: @date, :hour.gte => @daypart_arr[0], :hour.lte => @daypart_arr[1]).all.each do |hour|
+      array.push(hour)
+      @ast += hour.AST
+      @oepe += hour.OEPE 
+      @cars += hour.cars
+    end  
+    @return = array
+    if ((@daypart_arr[1]-@daypart_arr[0]+1) != 0)
+      @avg_ast = @ast/(@daypart_arr[1]-@daypart_arr[0]+1)
+      @avg_oepe = @oepe/(@daypart_arr[1]-@daypart_arr[0]+1)
+    else
+      @avg_ast = 0
+      @avg_oepe = 0
+    end
+  end
+
+  def daypart
+    
+  end
+
   def url_hourly(businessUnitId)
     return URI("https://dtld-poc.appspot.com/_ah/api/dtldapi/v1/drivethrudashboard/hourlysummary?businessUnitId=#{businessUnitId}&withDbUpdate=2")
   end
@@ -41,7 +131,7 @@ class DtsHourliesController < ApplicationController
 
   end
 
-  def dts_post
+  def dts_do
     if (params[:businessUnitId] != nil)
       @@businessUnitId = params[:businessUnitId]
       url_hourlysummary = url_hourly(@@businessUnitId)
@@ -84,17 +174,7 @@ class DtsHourliesController < ApplicationController
       end
       @dailyranking = daily
     else
-        @hourlysummary = Array[]
-        stringling = "Store number not supplied."
-        respo = JSON.parse('{"error" : true }')
-        respo["message"] = stringling
-        @hourlysummary.push(respo)
-        @dailyranking = nil
-    end
-  end
-  
-  def dts
-    if (current_person[:store] != nil)
+        if (current_person[:store] != nil)
     @@businessUnitId = current_person[:store]
       url_hourlysummary = url_hourly(@@businessUnitId)
       url_daily = URI("https://dtld-poc.appspot.com/_ah/api/dtldapi/v1/drivethrudashboard/dailyranking?businessUnitId=#{@@businessUnitId}")
@@ -143,7 +223,14 @@ class DtsHourliesController < ApplicationController
         @hourlysummary.push(respo)
         @dailyranking = nil
     end
+    end
   end
+
+
+  def dts
+    
+  end
+  
   def dts_hourlies_live_do
     @@businessUnitId = current_person[:store]
     if (params[:storeId] != nil && params[:storeId] != "")
@@ -234,11 +321,11 @@ class DtsHourliesController < ApplicationController
     if @reportdata != nil
       @reportdata.each_with_index do |hour,index|
         if (hour[1]["COD 2"] == nil)
-          @dtshourly = DtsHourly.new(date: Time.now.to_date, hour: hour[0].to_i, cars: hour[1]["Cars"].to_i, COD1: hour[1]["COD 1"].to_i, HHOT: hour[1]["HHOT"].to_i, Cashier: hour[1]["Cashier"].to_i, Presenter: hour[1]["Presenter"].to_i, OEPE: hour[1]["OE-PE"].to_i, AST: hour[1]["AST"].to_i, TAR_COD1: hour[1]["TAR_COD 1"].to_i, TAR_HHOT: hour[1]["TAR_HHOT"].to_i, TAR_Cashier: hour[1]["TAR_Cashier"].to_i, TAR_Presenter: hour[1]["TAR_Presenter"].to_i, TAR_OEPE: hour[1]["TAR_OE-PE"].to_i, TAR_AST: hour[1]["TAR_AST"].to_i, datestring: Time.now.to_date, storeId: @storeid.to_s)
+          @dtshourly = DtsHourly.new(date: @date, hour: hour[0].to_i, cars: hour[1]["Cars"].to_i, COD1: hour[1]["COD 1"].to_i, HHOT: hour[1]["HHOT"].to_i, Cashier: hour[1]["Cashier"].to_i, Presenter: hour[1]["Presenter"].to_i, OEPE: hour[1]["OE-PE"].to_i, AST: hour[1]["AST"].to_i, TAR_COD1: hour[1]["TAR_COD 1"].to_i, TAR_HHOT: hour[1]["TAR_HHOT"].to_i, TAR_Cashier: hour[1]["TAR_Cashier"].to_i, TAR_Presenter: hour[1]["TAR_Presenter"].to_i, TAR_OEPE: hour[1]["TAR_OE-PE"].to_i, TAR_AST: hour[1]["TAR_AST"].to_i, datestring: @date.to_date, storeId: @storeid.to_s)
         
         end
         if (hour[1]["HHOT"] == nil)
-          @dtshourly = DtsHourly.new(date: Time.now.to_date, hour: hour[0].to_i, cars: hour[1]["Cars"].to_i, COD1: hour[1]["COD 1"].to_i, COD2: hour[1]["COD 2"].to_i, Cashier: hour[1]["Cashier"].to_i, Presenter: hour[1]["Presenter"].to_i, OEPE: hour[1]["OE-PE"].to_i, AST: hour[1]["AST"].to_i, TAR_COD1: hour[1]["TAR_COD 1"].to_i, TAR_COD2: hour[1]["TAR_COD 2"].to_i, TAR_Cashier: hour[1]["TAR_Cashier"].to_i, TAR_Presenter: hour[1]["TAR_Presenter"].to_i, TAR_OEPE: hour[1]["TAR_OE-PE"].to_i, TAR_AST: hour[1]["TAR_AST"].to_i, datestring: Time.now.to_date, storeId: @storeid.to_s)
+          @dtshourly = DtsHourly.new(date: @date, hour: hour[0].to_i, cars: hour[1]["Cars"].to_i, COD1: hour[1]["COD 1"].to_i, COD2: hour[1]["COD 2"].to_i, Cashier: hour[1]["Cashier"].to_i, Presenter: hour[1]["Presenter"].to_i, OEPE: hour[1]["OE-PE"].to_i, AST: hour[1]["AST"].to_i, TAR_COD1: hour[1]["TAR_COD 1"].to_i, TAR_COD2: hour[1]["TAR_COD 2"].to_i, TAR_Cashier: hour[1]["TAR_Cashier"].to_i, TAR_Presenter: hour[1]["TAR_Presenter"].to_i, TAR_OEPE: hour[1]["TAR_OE-PE"].to_i, TAR_AST: hour[1]["TAR_AST"].to_i, datestring: @date.to_date, storeId: @storeid.to_s)
 
         end
         if (DtsHourly.find_by(datestring: Time.now.to_date.to_s, hour: hour[0].to_i, storeId: @storeid.to_s) == nil)
@@ -324,6 +411,11 @@ class DtsHourliesController < ApplicationController
 
     def datestringify
       self.datestring = self.date
+    end
+
+    def log(event)
+      ev = Activity.new(uid: current_person.id, event: event, storeId: current_person.store, timestamp: Time.now)
+      ev.save
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

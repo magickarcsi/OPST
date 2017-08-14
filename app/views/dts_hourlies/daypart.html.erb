@@ -1,0 +1,32 @@
+<%- model_class = DtsHourly -%>
+<div class="page-header">
+  <h1><%=t '.title', :default => model_class.model_name.human.pluralize.titleize %></h1>
+</div>
+<%= flash_messages %>
+<p>
+Please enter 4 digit restaurant number. Ie: 0610 or 1074 <br/>
+<%= form_tag({controller: "dts_hourlies", action: "daypart_do"}, method: "get", remote: true) do%>
+<div class="form-group">
+    <p>Store: <%= text_field_tag :storeId %>
+    Date: <%= text_field_tag :date %>
+    Daypart: <%= select_tag 'daypart', '<option value="1">Overnight</option><option value="2">Open</option><option value="3">Dayshift</option><option value="4">Evening</option>'.html_safe, prompt: "Select daypart" %>
+    <%= submit_tag "Go", data: { disable_with: "Loading..." } %></p>
+  </div>
+  <script>
+  $("#date").datepicker({
+        format: "yyyy-mm-dd",
+        weekStart: 1,
+        maxViewMode: 2,
+        endDate: "today",
+        todayBtn: "linked",
+        language: "en-GB",
+        daysOfWeekHighlighted: "0,6",
+        calendarWeeks: true,
+        autoclose: true,
+        todayHighlight: true
+    });
+  </script>
+  <% end %>
+</p>
+<div id="daypart_table">
+</div>

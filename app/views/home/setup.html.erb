@@ -1,0 +1,117 @@
+<%= flash_messages %>
+<div class="page-header">
+  <h1>Setup</h1>
+</div>
+<div id="dash">
+  </div>
+  <br/>
+<ul class="nav nav-tabs">
+<% @stores.each_with_index do |store,index| %>
+    <% if index == 0 %>
+        <li class="active"><a data-toggle="tab" href="#<%=store%>"><%=store%></a></li>
+    <% end %>
+    <% if index != 0 %>
+        <li><a data-toggle="tab" href="#<%=store%>"><%=store%></a></li>
+    <% end %>
+<% end %>
+</ul>
+
+<div class="tab-content">
+    <% @stores.each_with_index do |store_hourly,index| %>
+        <% if index == 0 %>
+            <div id="<%=store_hourly%>" class="tab-pane fade in active">
+                <h3><%=@store_names[store_hourly]%> (<%=store_hourly%>)</h3>
+                    <% if @bm_names[store_hourly] != nil %>
+                        <p><strong>Business Manager: </strong><%= link_to "#{@bm_names[store_hourly].firstname}  #{@bm_names[store_hourly].lastname}", person_path(@bm_names[store_hourly]), :class => 'btn btn-default' %></p>
+                    <% else %>
+                        <p><strong>Business Manager: </strong>Not supplied. <%= link_to "Add now!", new_person_path, :class => 'btn btn-default' %></p>
+                    <% end %>
+                    
+                <table class="table table-hover table-bordered" style="font-size: x-small; width: 450px;">
+                    <thead>
+                        <tr>
+                            <td colspan="3" style="text-align: center;"><strong>Daypart definitions</strong></td>
+                            <td id="change_box-<%=store_hourly%>" style="text-align: center; vertical-align: middle;">
+                            
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Part</strong></td>
+                            <td><strong>Start</strong></td>
+                            <td><strong>End</strong></td>
+                            <td><strong>Open?</strong></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <%= form_tag({controller: "home", action: "setup_dp_do"}, method: "get", remote: true) do%>
+                    <% @dp_def[store_hourly].each_with_index do |dp,index| %>
+                <tr>
+                    <% if dp.start != nil %>
+                        <td><%= label_tag :daypart_num, @daypart_str[dp.daypart_num] %></td>
+                        <td><%= text_field_tag :start, dp.start, size: 5 %>:00</td>
+                        <td><%= text_field_tag :end, dp.end, size: 5 %>:00</td>
+                        <td><%= check_box_tag :open, dp.open, dp.open %></td>
+                    <% else %>
+                        <td><%= label_tag :daypart_num, @daypart_str[dp.daypart_num] %></td>
+                        <td><%= text_field_tag :start, dp.start, size: 5 %>:00</td>
+                        <td><%= text_field_tag :end, dp.end, size: 5 %>:00</td>
+                        <td><%= check_box_tag :open, dp.open, dp.open %></td>
+                        
+                    <% end %>
+                </tr>
+            <% end %>
+            <tr><td colspan="4" style="text-align: center;"><%= submit_tag "Save changes", data: { disable_with: "Loading..." } %></td></tr>
+            </tbody>
+            <% end %>
+                </table>
+            </div>
+        <% end %>
+        <% if index != 0 %>
+            <div id="<%=store_hourly%>" class="tab-pane fade">
+                <h3><%=@store_names[store_hourly]%> (<%=store_hourly%>)</h3>
+                    <% if @bm_names[store_hourly] != nil %>
+                        <p><strong>Business Manager: </strong><%= link_to "#{@bm_names[store_hourly].firstname}  #{@bm_names[store_hourly].lastname}", person_path(@bm_names[store_hourly]), :class => 'btn btn-default' %></p>
+                    <% else %>
+                        <p><strong>Business Manager: </strong>Not supplied. <%= link_to "Add now!", new_person_path, :class => 'btn btn-default' %></p>
+                    <% end %>
+                <table class="table table-bordered table-responsive" style="font-size: x-small; width: 450px;">
+                    <thead>
+                        <tr>
+                            <td colspan="3" style="text-align: center;"><strong>Daypart definitions</strong></td>
+                            <td id="change_box-<%=store_hourly%>" style="text-align: center; vertical-align: middle;">
+                            
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Part</strong></td>
+                            <td><strong>Start</strong></td>
+                            <td><strong>End</strong></td>
+                            <td><strong>Open?</strong></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <%= form_tag({controller: "home", action: "setup_dp_do"}, method: "get", remote: true) do%>
+                    <% @dp_def[store_hourly].each_with_index do |dp,index| %>
+                <tr>
+                    <% if dp.start != nil %>
+                       <td><%= label_tag :daypart_num, @daypart_str[dp.daypart_num] %></td>
+                        <td><%= text_field_tag :start, dp.start, size: 5 %>:00</td>
+                        <td><%= text_field_tag :end, dp.end, size: 5 %>:00</td>
+                        <td><%= check_box_tag :open, dp.open, dp.open %></td>
+                    <% else %>
+                        <td><%= label_tag :daypart_num, @daypart_str[dp.daypart_num] %></td>
+                        <td><%= text_field_tag :start, dp.start, size: 5 %>:00</td>
+                        <td><%= text_field_tag :end, dp.end, size: 5 %>:00</td>
+                        <td><%= check_box_tag :open, dp.open, dp.open %></td>
+                    <% end %>
+                </tr>
+            <% end %>
+            <tr><td colspan="4" style="text-align: center;"><%= submit_tag "Save changes", data: { disable_with: "Loading..." } %></td></tr>
+            </tbody>
+            <% end %>
+                </table>
+            </div>
+        <% end %>
+    <%end %>
+  </div>
+  

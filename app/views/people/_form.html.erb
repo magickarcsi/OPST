@@ -58,6 +58,13 @@
     <%=f.error_span(:email) %>
   </div>
   <div class="form-group">
+    <%= f.label :position, :class => 'control-label col-lg-2' %>
+    <div class="col-lg-10">
+      <%= f.select :position, ["Shift Manager", "Senior Shift Manager", "Assistant Manager", "Business Manager", "Supervisor", "Franchisee"], :prompt =>["Select One"], :class => 'form-control' %>
+    </div>
+    <%=f.error_span(:position) %>
+  </div>
+  <div class="form-group">
     <%= f.label :active, :class => 'control-label col-lg-2' %>
     <div class="col-lg-10">
       <%= f.check_box :active, :class => 'inline-checkbox' %>

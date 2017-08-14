@@ -50,4 +50,5 @@ before_save { self.email = email.downcase }
   field :active, type: Mongoid::Boolean
   field :enabled, type: Mongoid::Boolean
   field :admin, type: Mongoid::Boolean
+  field :position, type: String, default: "Shift Manager"
 end
