@@ -7,25 +7,41 @@ class HomeController < ApplicationController
   # You can leave the mission method blank, it will render
   # the corresponding static_pages/mission.html.erb by default
   def setup_dp_do
-    params.permit(:change)
+    
+    params.permit(:store, :start => [], :finish => [], :open => {}, :daypart_num => [])
+    @par = params.permit!.to_h
     @stores = ["0335","0610","0771","0858","1098","1330"]
-    if params[:change] == 1
-      @change = true
-    elsif params[:change] == 0
-      @change = false
-    else
-      @change = false
-    end
+    @store = params[:store]
+    @par = params.to_h
     @daypart_str = Array[]
     @daypart_str[1] = "Overnight"
     @daypart_str[2] = "Open"
     @daypart_str[3] = "Dayshift"
     @daypart_str[4] = "Evening"
+    @bm_names = Hash[] #{"0335" => "Torquay 1", "0610" => "","0771" => "","0858" => "" ,"1098" => "", "1330" => ""}
     @dp_def = Hash[]
+    openparam = params[:open]
     @stores.each do |store|
+      person = Person.find_by(store: store, position: "Business Manager")
+      if person != nil
+        @bm_names[store] = person
+      else
+        @bm_names[store] = nil
+      end
       dp_defi = Array[]
       for i in 1..4 do
-        dp = Dayparts.find_by(storeId: store, daypart_num: i)
+        if params[:start][i] != ""
+          if openparam[(i).to_s] != nil
+            dp = Dayparts.new(storeId: params[:store], daypart_num: params[:daypart_num][i-1].to_i, start: params[:start][i-1].to_i, finish: params[:finish][i-1].to_i, open: openparam[(i).to_s])
+          else
+            dp = Dayparts.new(storeId: params[:store], daypart_num: params[:daypart_num][i-1].to_i, start: params[:start][i-1].to_i, finish: params[:finish][i-1].to_i, open: false)
+          end 
+        else
+          dp = nil
+        end 
+        if dp == nil
+          dp = Dayparts.new(storeId: store, daypart_num: i, start: nil, finish: nil, open: false)
+        end
         dp_defi.push(dp)
       end
       @dp_def[store] = dp_defi
@@ -53,7 +69,7 @@ class HomeController < ApplicationController
       for i in 1..4 do
         dp = Dayparts.find_by(storeId: store, daypart_num: i)
         if dp == nil
-          dp = Dayparts.new(storeId: store, daypart_num: i, start: nil, end: nil, open: false)
+          dp = Dayparts.new(storeId: store, daypart_num: i, start: nil, finish: nil, open: false)
         end
         dp_defi.push(dp)
       end

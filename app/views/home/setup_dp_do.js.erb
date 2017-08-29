@@ -1,2 +1,1 @@
-$('#dash').html("<%= j (render 'layouts/dp_def_table') %>");
-$('#dash').slideDown(350);
+$('#tbody-<%=@store%>').html("<%= j (render 'layouts/dp_def_table', store_hourly: @store) %>");

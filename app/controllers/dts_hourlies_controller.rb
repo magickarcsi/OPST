@@ -54,7 +54,7 @@ class DtsHourliesController < ApplicationController
           @daypart_arr[1] = 5
         else
           @daypart_arr[0] = @data.start
-          @daypart_arr[1] = @data.end
+          @daypart_arr[1] = @data.finish
         end
         
       when 2 #open
@@ -64,7 +64,7 @@ class DtsHourliesController < ApplicationController
           @daypart_arr[1] = 6
         else
           @daypart_arr[0] = @data.start
-          @daypart_arr[1] = @data.end
+          @daypart_arr[1] = @data.finish
         end
       when 3 #dayshift
         @data = Dayparts.find_by(storeId: @storeId, daypart_num: 3)
@@ -73,7 +73,7 @@ class DtsHourliesController < ApplicationController
           @daypart_arr[1] = 15
         else
           @daypart_arr[0] = @data.start
-          @daypart_arr[1] = @data.end
+          @daypart_arr[1] = @data.finish
         end
       when 4 #evening
         @data = Dayparts.find_by(storeId: @storeId, daypart_num: 4)
@@ -82,7 +82,7 @@ class DtsHourliesController < ApplicationController
           @daypart_arr[1] = 23
         else
           @daypart_arr[0] = @data.start
-          @daypart_arr[1] = @data.end
+          @daypart_arr[1] = @data.finish
         end
       else
         
