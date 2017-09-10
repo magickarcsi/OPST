@@ -91,7 +91,6 @@ class HomeController < ApplicationController
     return URI("https://dtld-poc.appspot.com/_ah/api/dtldapi/v1/reporting/getreportdata?storeId=#{storeId}&businessDay=#{date}&dayPart=#{dayPart}&reportType=#{reportType}")
 
   end
-
   
   def index
     if (current_person[:store] != nil)

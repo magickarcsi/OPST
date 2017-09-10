@@ -1,4 +1,4 @@
-<h4><strong>Store: </strong><%= @storeId%> <strong>Date: </strong><%=@date%> <strong>Daypart: </strong><%=@daypart_str[@daypart_num.to_i]%></h4>
+<h4><strong>Store: </strong><%= @storename[@storeId]%> <strong>Date: </strong><%=@date%> <strong>Daypart: </strong><%=@daypart_str[@daypart_num.to_i]%></h4>
   <% if @return[0] != nil %>
     <table id="table" class="table table-hover table-responsive" style="font-size: small; width: 25%">
       <thead>

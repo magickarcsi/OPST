@@ -2,9 +2,9 @@
 <div class="page-header">
   <h1>Setup</h1>
 </div>
-<div id="dash">
-  </div>
-  <br/>
+<br/>
+<h2>Opening times<h2>
+  
 <ul class="nav nav-tabs">
 <% @stores.each_with_index do |store,index| %>
     <% if index == 0 %>
@@ -44,28 +44,26 @@
                     </thead>
                     
                     <tbody id="tbody-<%=store_hourly%>">
-                    <%= form_tag({controller: "home", action: "setup_dp_do"}, method: "get", remote: true) do%>
+                    
                         <% @dp_def[store_hourly].each_with_index do |dp,index| %>
                             <tr>
                                 <% if dp.start != nil %>
                                 <td><%= label_tag 'daypart_num[]', @daypart_str[dp.daypart_num] %></td>
                                     <%=hidden_field_tag 'daypart_num[]', dp.daypart_num %>
-                                    <td><%= text_field_tag 'start[]', dp.start, size: 5 %>:00</td>
-                                    <td><%= text_field_tag 'finish[]', dp.finish, size: 5 %>:00</td>
-                                    <td><%= check_box 'open', index+1, {:checked => dp.open}, 'true', 'false' %></td>
+                                    <td><%= label_tag 'start[]', dp.start, size: 5 %></td>
+                                    <td><%= label_tag 'finish[]', dp.finish, size: 5 %></td>
+                                    <td><%= check_box 'open', index+1, {:checked => dp.open, :disabled => true}, 'true', 'false' %></td>
                                     <%= hidden_field_tag :store, store_hourly %>
                                 <% else %>
                                     <td><%= label_tag 'daypart_num[]', @daypart_str[dp.daypart_num] %></td>
                                     <%=hidden_field_tag 'daypart_num[]', dp.daypart_num %>
-                                    <td><%= text_field_tag 'start[]', dp.start, size: 5 %>:00</td>
-                                    <td><%= text_field_tag 'finish[]', dp.finish, size: 5 %>:00</td>
-                                    <td><%= check_box 'open', index+1, {:checked => dp.open}, 'true', 'false' %></td>
+                                    <td><%= label_tag 'start[]', dp.start, size: 5 %></td>
+                                    <td><%= label_tag 'finish[]', dp.finish, size: 5 %></td>
+                                    <td><%= check_box 'open', index+1, {:checked => dp.open, :disabled => true}, 'true', 'false' %></td>
                                     <%=hidden_field_tag :store, store_hourly %>
                                 <% end %>
                             </tr>
                         <% end %>
-                        <tr><td colspan="4" style="text-align: left;"><%= submit_tag "Save changes", data: { disable_with: "Saving..." } %></td></tr>
-                    <% end %>
                     </tbody>
                     
                     </table>        
@@ -96,30 +94,27 @@
                         </tr>
                     </thead>
                     <tbody id="tbody-<%=store_hourly%>">
-                       <%= form_tag({controller: "home", action: "setup_dp_do"}, method: "get", remote: true) do%>
-                        <% @dp_def[store_hourly].each_with_index do |dp,index| %>
+                       <% @dp_def[store_hourly].each_with_index do |dp,index| %>
                             <tr>
                                 <% if dp.start != nil %>
                                 <td><%= label_tag 'daypart_num[]', @daypart_str[dp.daypart_num] %></td>
                                     <%=hidden_field_tag 'daypart_num[]', dp.daypart_num %>
-                                    <td><%= text_field_tag 'start[]', dp.start, size: 5 %>:00</td>
-                                    <td><%= text_field_tag 'finish[]', dp.finish, size: 5 %>:00</td>
-                                    <td><%= check_box 'open', index+1, {:checked => dp.open}, 'true', 'false' %></td>
+                                    <td><%= label_tag 'start[]', dp.start, size: 5 %></td>
+                                    <td><%= label_tag 'finish[]', dp.finish, size: 5 %></td>
+                                    <td><%= check_box 'open', index+1, {:checked => dp.open, :disabled => true}, 'true', 'false' %></td>
                                     <%= hidden_field_tag :store, store_hourly %>
                                 <% else %>
                                     <td><%= label_tag 'daypart_num[]', @daypart_str[dp.daypart_num] %></td>
                                     <%=hidden_field_tag 'daypart_num[]', dp.daypart_num %>
-                                    <td><%= text_field_tag 'start[]', dp.start, size: 5 %>:00</td>
-                                    <td><%= text_field_tag 'finish[]', dp.finish, size: 5 %>:00</td>
-                                    <td><%= check_box 'open', index+1, {:checked => dp.open}, 'true', 'false'%></td>
+                                    <td><%= label_tag 'start[]', dp.start, size: 5 %></td>
+                                    <td><%= label_tag 'finish[]', dp.finish, size: 5 %></td>
+                                    <td><%= check_box 'open', index+1, {:checked => dp.open, :disabled => true}, 'true', 'false'%></td>
                                     <%=hidden_field_tag :store, store_hourly %>
                                 <% end %>
                             </tr>
                         <% end %>
-                        <tr><td colspan="4" style="text-align: left;"><%= submit_tag "Save changes", data: { disable_with: "Saving..." } %></td></tr>
-                    <% end %>
+                        
                     </tbody>
-                    
                     </table>
             </div>
         <% end %>

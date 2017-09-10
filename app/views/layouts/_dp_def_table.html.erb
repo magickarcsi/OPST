@@ -1,4 +1,3 @@
-<%= form_tag({controller: "home", action: "setup_dp_do"}, method: "get", remote: true) do%>
 <% @dp_def[store_hourly].each_with_index do |dp,index| %>
     <tr>
         <% if dp.start != nil %>
@@ -17,6 +16,4 @@
             <%=hidden_field_tag :store, store_hourly %>
         <% end %>
     </tr>
-<% end %>
-<tr><td colspan="4" style="text-align: left;"><%= submit_tag "Save changes", data: { disable_with: "Saving..." } %></td></tr>
 <% end %>

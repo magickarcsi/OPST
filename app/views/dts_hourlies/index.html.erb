@@ -18,7 +18,7 @@
   <% @stores.each_with_index do |store_hourly,index| %>
   <% if index == 0 %>
     <div id="<%=store_hourly.storeId%>" class="tab-pane fade in active">
-    <h3>Store:<%=store_hourly.storeId%></h3>
+    <h3>Store: <%=@storename[store_hourly.storeId]%></h3>
     
     <table id="table-<%=store_hourly.storeId%>" class="table table-hover table-responsive" style="font-size: x-small;">
   <thead>
@@ -104,11 +104,10 @@
                     <% if current_person.try(:admin?) %>
                     <li role="separator" class="divider"></li>
                     <li><%= link_to t('.destroy', :default => t("helpers.links.destroy")),
-                          dts_hourlies_path(dts_hourly),
-                          :method => :delete,
-                          :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => "Are you sure you want to delete?")) },
-                          :disable_with => "Loading...",
-                          :class => 'bg-danger text-black' %>  
+                        dts_hourly_path(dts_hourly),
+                        :method => 'delete',
+                        :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                        :class => 'btn btn-danger' %>
                     </li>
                     <% end %>
                 </ul>
@@ -120,122 +119,9 @@
     <% end %>
   </tbody>
 </table>
-
-  </div>
-  <% end %>
-  <% if index != 0 %>
-    <div id="<%=store_hourly.storeId%>" class="tab-pane fade">
-    <h3>Store:<%=store_hourly.storeId%></h3>
-    
-    <table id="table-<%=store_hourly.storeId%>" class="table table-hover table-responsive" style="font-size: x-small;">
-  <thead>
-    <tr>
-      <th>Date</th>
-      <th>Hour</th>
-      <th><%= model_class.human_attribute_name(:cars) %></th>
-      <th>COD1</th>
-      <th>COD1 % </th>
-      <th>COD2</th>
-      <th>COD2 % </th>
-      <th>HHOT</th>
-      <th>HHOT % </th>
-      <th><%= model_class.human_attribute_name(:Cashier) %></th>
-      <th>Cashier % </th>
-      <th><%= model_class.human_attribute_name(:Presenter) %></th>
-      <th>Presenter % </th>
-      <th>OEPE</th>
-      <th>OEPE % </th>
-      <th>AST</th>
-      <th>AST % </th>
-      <th><%=t '.actions', :default => t("helpers.actions") %></th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @dts_hourlies.each do |dts_hourly| %>
-      <% if dts_hourly.storeId == store_hourly.storeId %>
-          <tr>
-            <td style="text-align: center; vertical-align: middle;"><%= dts_hourly.datestring %></td>
-            <td><%= link_to "#{dts_hourly.hour}:00", dts_hourly_path(dts_hourly) %></td>
-            <td><%= dts_hourly.cars %></td>
-            <td><%= dts_hourly.COD1 %></td>
-            <td><%= dts_hourly.TAR_COD1 %>%</td>
-            <td>
-            <% if (dts_hourly.COD2 == nil)  %>
-            -
-            <% end %>
-            <% if (dts_hourly.COD2 != nil)  %>
-            <%= dts_hourly.COD2 %>
-            <% end %>
-            </td>
-            <td>
-            <% if (dts_hourly.COD2 == nil)  %>
-            -
-            <% end %>
-            <% if (dts_hourly.COD2 != nil)  %>
-            <%= dts_hourly.TAR_COD2 %> %
-            <% end %>
-            </td>
-            <td>
-            <% if (dts_hourly.HHOT == nil)  %>
-            -
-            <% end %>
-            <% if (dts_hourly.HHOT != nil)  %>
-            <%= dts_hourly.HHOT %>
-            <% end %>
-            </td>
-            <td>
-            <% if (dts_hourly.HHOT == nil)  %>
-            -
-            <% end %>
-            <% if (dts_hourly.HHOT != nil)  %>
-            <%= dts_hourly.TAR_HHOT %> %
-            <% end %>
-            </td>
-            <td><%= dts_hourly.Cashier %></td>
-            <td><%= dts_hourly.TAR_Cashier %>%</td>
-            <td><%= dts_hourly.Presenter %></td>
-            <td><%= dts_hourly.TAR_Presenter %>%</td>
-            <td><%= dts_hourly.OEPE %></td>
-            <td><%= dts_hourly.TAR_OEPE %>%</td>
-            <td><%= dts_hourly.AST %></td>
-            <td><%= dts_hourly.TAR_AST %>%</td>
-            <td>
-              <div class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Actions<span class="caret"></span></a>
-              <ul class="dropdown-menu">
-                
-                    <li><%= link_to t('.show', :default => t("helpers.links.show")),
-                          dts_hourly_path(dts_hourly) %></li>
-                    <li><%= link_to t('.edit', :default => t("helpers.links.edit")),
-                          edit_dts_hourly_path(dts_hourly) %></li>
-                    <% if current_person.try(:admin?) %>
-                    <li role="separator" class="divider"></li>
-                    <li><%= link_to t('.destroy', :default => t("helpers.links.destroy")),
-                          dts_hourlies_path(dts_hourly),
-                          :method => :delete,
-                          :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => "Are you sure you want to delete?")) },
-                          :disable_with => "Loading...",
-                          :class => 'bg-danger text-black' %>  
-                    </li>
-                    <% end %>
-                </ul>
-              </div>
-            </td>
-          </tr>
-      <% end %>
-        
-    <% end %>
-  </tbody>
-</table>
-
-  </div>
-  <% end %>
-<% end %>
-</div>
-
 <script type="text/javascript">
     $(document).ready(function () {
-        $('#table').each(function () {
+        $('#table-<%=store_hourly.storeId%>').each(function () {
             var Column_number_to_Merge = 1;
  
             // Previous_TD holds the first instance of same td. Initially first TD=null.
@@ -268,6 +154,152 @@
         });
     });
 </script>
+  </div>
+  <% end %>
+  <% if index != 0 %>
+    <div id="<%=store_hourly.storeId%>" class="tab-pane fade">
+    <h3>Store: <%=@storename[store_hourly.storeId]%></h3>
+    
+    <table id="table-<%=store_hourly.storeId%>" class="table table-hover table-responsive" style="font-size: x-small;">
+  <thead>
+    <tr>
+      <th>Date</th>
+      <th>Hour</th>
+      <th><%= model_class.human_attribute_name(:cars) %></th>
+      <th>COD1</th>
+      <th>COD1 % </th>
+      <th>COD2</th>
+      <th>COD2 % </th>
+      <th>HHOT</th>
+      <th>HHOT % </th>
+      <th><%= model_class.human_attribute_name(:Cashier) %></th>
+      <th>Cashier % </th>
+      <th><%= model_class.human_attribute_name(:Presenter) %></th>
+      <th>Presenter % </th>
+      <th>OEPE</th>
+      <th>OEPE % </th>
+      <th>AST</th>
+      <th>AST % </th>
+      <th><%=t '.actions', :default => t("helpers.actions") %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @dts_hourlies.each do |dts_hourly| %>
+      <% if dts_hourly.storeId == store_hourly.storeId %>
+          <tr>
+            <td style="text-align: center; vertical-align: middle;"><%= dts_hourly.datestring %></td>
+            <td><%= link_to "#{dts_hourly.hour}:00", dts_hourly_path(dts_hourly) %></td>
+            <td><%= dts_hourly.cars %></td>
+            <td><%= dts_hourly.COD1 %></td>
+            <td><%= dts_hourly.TAR_COD1 %>%</td>
+            <td>
+            <% if (dts_hourly.COD2 == nil)  %>
+            -
+            <% end %>
+            <% if (dts_hourly.COD2 != nil)  %>
+            <%= dts_hourly.COD2 %>
+            <% end %>
+            </td>
+            <td>
+            <% if (dts_hourly.COD2 == nil)  %>
+            -
+            <% end %>
+            <% if (dts_hourly.COD2 != nil)  %>
+            <%= dts_hourly.TAR_COD2 %> %
+            <% end %>
+            </td>
+            <td>
+            <% if (dts_hourly.HHOT == nil)  %>
+            -
+            <% end %>
+            <% if (dts_hourly.HHOT != nil)  %>
+            <%= dts_hourly.HHOT %>
+            <% end %>
+            </td>
+            <td>
+            <% if (dts_hourly.HHOT == nil)  %>
+            -
+            <% end %>
+            <% if (dts_hourly.HHOT != nil)  %>
+            <%= dts_hourly.TAR_HHOT %> %
+            <% end %>
+            </td>
+            <td><%= dts_hourly.Cashier %></td>
+            <td><%= dts_hourly.TAR_Cashier %>%</td>
+            <td><%= dts_hourly.Presenter %></td>
+            <td><%= dts_hourly.TAR_Presenter %>%</td>
+            <td><%= dts_hourly.OEPE %></td>
+            <td><%= dts_hourly.TAR_OEPE %>%</td>
+            <td><%= dts_hourly.AST %></td>
+            <td><%= dts_hourly.TAR_AST %>%</td>
+            <td>
+              <div class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Actions<span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                
+                    <li><%= link_to t('.show', :default => t("helpers.links.show")),
+                          dts_hourly_path(dts_hourly) %></li>
+                    <li><%= link_to t('.edit', :default => t("helpers.links.edit")),
+                          edit_dts_hourly_path(dts_hourly) %></li>
+                    <% if current_person.try(:admin?) %>
+                    <li role="separator" class="divider"></li>
+                    <li><%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+              dts_hourly_path(dts_hourly),
+              :method => 'delete',
+              :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+              :class => 'btn btn-danger' %>
+                    </li>
+                    <% end %>
+                </ul>
+              </div>
+            </td>
+          </tr>
+      <% end %>
+        
+    <% end %>
+  </tbody>
+</table>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#table-<%=store_hourly.storeId%>').each(function () {
+            var Column_number_to_Merge = 1;
+ 
+            // Previous_TD holds the first instance of same td. Initially first TD=null.
+            var Previous_TD = null;
+            var i = 1;
+            $("tbody",this).find('tr').each(function () {
+                // find the correct td of the correct column
+                // we are considering the table column 1, You can apply on any table column
+                var Current_td = $(this).find('td:nth-child(' + Column_number_to_Merge + ')');
+                 
+                if (Previous_TD == null) {
+                    // for first row
+                    Previous_TD = Current_td;
+                    i = 1;
+                } 
+                else if (Current_td.text() == Previous_TD.text()) {
+                    // the current td is identical to the previous row td
+                    // remove the current td
+                    Current_td.remove();
+                    // increment the rowspan attribute of the first row td instance
+                    Previous_TD.attr('rowspan', i + 1);
+                    i = i + 1;
+                } 
+                else {
+                    // means new value found in current td. So initialize counter variable i
+                    Previous_TD = Current_td;
+                    i = 1;
+                }
+            });
+        });
+    });
+</script>
+  </div>
+  <% end %>
+<% end %>
+</div>
+
+
 
 <%= link_to t('.new', :default => t("helpers.links.new")),
             new_dts_hourly_path,
