@@ -100,20 +100,20 @@ class DtsHourliesController < ApplicationController
     array = Array[]
     @ast = 0
     @oepe = 0
-    @avg_ast = 0.0
-    @avg_oepe = 0.0
+    @avg_ast = 0
+    @avg_oepe = 0
     @cars = 0
     log("Daypart read: (#{@storeId}) #{@date} #{@daypart_str[@daypart_num.to_i]}")
     DtsHourly.where(storeId: @storeId, datestring: @date, :hour.gte => @daypart_arr[0], :hour.lte => @daypart_arr[1]).all.each do |hour|
       array.push(hour)
       @ast += hour.AST
-      @oepe += hour.OEPE 
+      @oepe += hour.OEPE
       @cars += hour.cars
     end  
     @return = array
     if ((@daypart_arr[1]-@daypart_arr[0]+1) != 0)
-      @avg_ast = @ast/(@daypart_arr[1]-@daypart_arr[0]+1)
-      @avg_oepe = @oepe/(@daypart_arr[1]-@daypart_arr[0]+1)
+      @avg_ast /= (@daypart_arr[1]-@daypart_arr[0]+1)
+      @avg_oepe /= (@daypart_arr[1]-@daypart_arr[0]+1)
     else
       @avg_ast = 0
       @avg_oepe = 0

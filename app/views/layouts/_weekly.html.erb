@@ -1,0 +1,7 @@
+<h4>Results for week (<%=@begin%> - <%=@end%>)</h4>
+<strong>Average AST: </strong> <%=@ast%>
+<strong>Average OEPE: </strong><%=@oepe%>
+<strong>Total cars: </strong><%=@cars%> </br></br>
+<% @result.each do |hour| %>
+  <%= "#{hour.datestring} - #{hour.hour}:00 >> AST: #{hour.AST} | OEPE: #{hour.OEPE} | Cars: #{hour.cars}" %></br>
+<% end %>

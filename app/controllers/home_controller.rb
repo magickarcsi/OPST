@@ -48,6 +48,41 @@ class HomeController < ApplicationController
     end
   end
 
+  def weekly
+  end
+
+  def store
+    params.permit(:date)
+    if (params[:date] != "" && params[:date] != nil)
+      date = Date.parse(params[:date])
+    else
+      date = Date.today
+    end
+    
+    @begin = date.beginning_of_week
+    @end = date.end_of_week
+    array = Array[]
+    @ast = 0
+    @oepe= 0
+    @cars = 0
+    DtsHourly.where(storeId: current_person.store, :datestring.gte => @begin.to_s, :datestring.lte => @end.to_s).all.each do |hour|
+      array.push(hour)
+      @ast += (hour.AST*hour.cars)
+      @oepe += (hour.OEPE*hour.cars)
+      @cars += hour.cars
+    end
+    if @cars == 0
+      @ast = 0
+      @oepe = 0
+    else
+      @ast /= @cars
+    @oepe /= @cars
+    end
+    
+    @result = array
+    @bm = Person.find_by(store: current_person.store, position: "Business Manager")
+  end
+
   def setup
     @daypart_str = Array[]
     @daypart_str[1] = "Overnight"
