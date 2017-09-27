@@ -52,31 +52,79 @@ class HomeController < ApplicationController
   end
 
   def store
-    params.permit(:date)
-    if (params[:date] != "" && params[:date] != nil)
-      date = Date.parse(params[:date])
+    params.permit(:week, :year)
+    if (params[:week] != "" && params[:week] != nil && params[:year] != "" && params[:year] != nil)
+      date = Date.commercial(params[:year].to_i, params[:week].to_i, 1)
+      @wn = params[:week]
     else
       date = Date.today
+      @wn = date.cweek
     end
-    
+    @dayparts = ["Overnight", "Open", "Dayshift", "Evening", "No data provided"]
     @begin = date.beginning_of_week
     @end = date.end_of_week
+    week = Array[]
+    movingday = @begin
+    week[0] = movingday
+    for i in 1..6 do
+      movingday = movingday.tomorrow
+      week[i] = movingday
+    end
+    oepe_d = [0,0,0,0]
+    ast_d = [0,0,0,0]
+    cars_d = [0,0,0,0]
+    length = [0,0,0,0]
     array = Array[]
     @ast = 0
     @oepe= 0
     @cars = 0
-    DtsHourly.where(storeId: current_person.store, :datestring.gte => @begin.to_s, :datestring.lte => @end.to_s).all.each do |hour|
-      array.push(hour)
-      @ast += (hour.AST*hour.cars)
-      @oepe += (hour.OEPE*hour.cars)
-      @cars += hour.cars
+    week.each_with_index do |day,index|
+      oepe_d = [0,0,0,0]
+      ast_d = [0,0,0,0]
+      cars_d = [0,0,0,0]
+      length = [0,0,0,0]
+      DtsHourly.where(storeId: current_person.store, datestring: week[index].to_s).all.each do |hour|
+        case hour.hour
+          when 0..5
+            oepe_d[0] += hour.OEPE*hour.cars
+            ast_d[0] += hour.AST*hour.cars
+            cars_d[0] += hour.cars
+            length[0] = 6
+          when 6..6
+            oepe_d[1] += hour.OEPE*hour.cars
+            ast_d[1] += hour.AST*hour.cars
+            cars_d[1] += hour.cars
+            length[1] = 1
+          when 7..15
+            oepe_d[2] += hour.OEPE*hour.cars
+            ast_d[2] += hour.AST*hour.cars
+            cars_d[2] += hour.cars
+            length[2] = 9
+          when 16..23
+            oepe_d[3] += hour.OEPE*hour.cars
+            ast_d[3] += hour.AST*hour.cars
+            cars_d[3] += hour.cars
+            length[3] = 8
+          else
+            return
+        end
+      end
+      for j in 0..3 do
+          @ast += ast_d[j]
+          @oepe += oepe_d[j]
+          @cars += cars_d[j]
+          oepe_d[j] /= cars_d[j] if cars_d[j] != 0
+          ast_d[j] /= cars_d[j] if cars_d[j] != 0
+          array.push([week[index], j, "Example M", oepe_d[j], ast_d[j], cars_d[j]]) if (oepe_d[j] != 0 && ast_d[j] != 0)
+          array.push([week[index], 4, "", "", "", ""]) if (oepe_d[j] == 0 && ast_d[j] == 0 && j == 0)
+        end
     end
     if @cars == 0
       @ast = 0
       @oepe = 0
     else
       @ast /= @cars
-    @oepe /= @cars
+      @oepe /= @cars
     end
     
     @result = array

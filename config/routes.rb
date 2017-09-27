@@ -14,5 +14,6 @@ Rails.application.routes.draw do
   get "/setup", to: "home#setup", as: "setup"
   get "/store", to: "home#store", as: "store"
   get "/setup/dp/do", to: "home#setup_dp_do", as: "setup_dp_do"
+  get "/dts/fetch", to: "dts_hourlies#dts_fetch", as: "dts_fetch"
   root 'home#index'
 end

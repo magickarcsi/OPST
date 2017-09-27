@@ -403,6 +403,57 @@ class DtsHourliesController < ApplicationController
     end
     
   end
+
+  def dts_fetch
+    params.permit(:date)
+    if (params[:date] != nil && params[:date] != "")
+        @date = params[:date]
+        @storeid = current_person.store
+        @response = reportdata(@storeid, @date, "Full", "Daily")
+            if @response["success"] == true
+              data = JSON.parse(@response["result"])
+              dat = @response["averageValues"]
+              averages = Hash[]
+              dat.each do |key, value|
+                value.collect {|k,v| [averages[key] = k.to_i, averages["TAR_#{key}"] = v] }
+              end
+              @dtsday = DtsDaily.new(date: @date, COD1: averages["COD 1"].to_i, COD2: averages["COD 2"].to_i, HHOT: averages["HHOT"].to_i, Cashier: averages["Cashier"].to_i, Presenter: averages["Presenter"].to_i, OEPE: averages["OE-PE"].to_i, AST: averages["AST"].to_i, TAR_COD1: averages["TAR_COD 1"].to_i, TAR_COD2: averages["TAR_COD 2"].to_i, TAR_HHOT: averages["TAR_HHOT"].to_i, TAR_Cashier: averages["TAR_Cashier"].to_i, TAR_Presenter: averages["TAR_Presenter"].to_i, TAR_OEPE: averages["TAR_OE-PE"].to_i, TAR_AST: averages["TAR_AST"].to_i, datestring: @date.to_date, storeId: @storeid.to_s)
+              if (DtsDaily.find_by(datestring: @date.to_date.to_s, storeId: @storeid.to_s) == nil)
+                @dtsday.save
+              end
+              data = Hash[ data.collect {|k,v| [k.to_i, v] } ]
+              @reportdata = data.sort
+              stringstore = @storeid.to_s
+              respon = JSON.parse('{"error" : false }')
+              respon["store"] = stringstore
+              respon["date"] = @date.to_date
+              @info = respon
+            else
+              respon = JSON.parse('{"error" : true }')
+              respon["store"] = stringstore
+              respon["date"] = @date.to_date
+              respon["message"] = @response["result"]
+              @info = respon
+            end
+        if @reportdata != nil
+          @reportdata.each_with_index do |hour,index|
+            if (hour[1]["COD 2"] == nil)
+              @dtshourly = DtsHourly.new(date: @date, hour: hour[0].to_i, cars: hour[1]["Cars"].to_i, COD1: hour[1]["COD 1"].to_i, HHOT: hour[1]["HHOT"].to_i, Cashier: hour[1]["Cashier"].to_i, Presenter: hour[1]["Presenter"].to_i, OEPE: hour[1]["OE-PE"].to_i, AST: hour[1]["AST"].to_i, TAR_COD1: hour[1]["TAR_COD 1"].to_i, TAR_HHOT: hour[1]["TAR_HHOT"].to_i, TAR_Cashier: hour[1]["TAR_Cashier"].to_i, TAR_Presenter: hour[1]["TAR_Presenter"].to_i, TAR_OEPE: hour[1]["TAR_OE-PE"].to_i, TAR_AST: hour[1]["TAR_AST"].to_i, datestring: @date.to_date, storeId: @storeid.to_s)
+            
+            end
+            if (hour[1]["HHOT"] == nil)
+              @dtshourly = DtsHourly.new(date: @date, hour: hour[0].to_i, cars: hour[1]["Cars"].to_i, COD1: hour[1]["COD 1"].to_i, COD2: hour[1]["COD 2"].to_i, Cashier: hour[1]["Cashier"].to_i, Presenter: hour[1]["Presenter"].to_i, OEPE: hour[1]["OE-PE"].to_i, AST: hour[1]["AST"].to_i, TAR_COD1: hour[1]["TAR_COD 1"].to_i, TAR_COD2: hour[1]["TAR_COD 2"].to_i, TAR_Cashier: hour[1]["TAR_Cashier"].to_i, TAR_Presenter: hour[1]["TAR_Presenter"].to_i, TAR_OEPE: hour[1]["TAR_OE-PE"].to_i, TAR_AST: hour[1]["TAR_AST"].to_i, datestring: @date.to_date, storeId: @storeid.to_s)
+
+            end
+            if (DtsHourly.find_by(datestring: @date.to_date.to_s, hour: hour[0].to_i, storeId: @storeid.to_s) == nil)
+              @dtshourly.save
+            end
+          end
+        end
+    end
+    flash[:success] = "Fetch successful"
+    render js: "window.location = '/store?year=#{@date.to_date.year}&week=#{@date.to_date.cweek}'"
+    end
   
   def dts_hourlies_live
     

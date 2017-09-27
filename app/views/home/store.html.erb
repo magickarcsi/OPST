@@ -1,4 +1,6 @@
 <%= flash_messages %>
 <h2>Store ID <%=current_person.store%></h2>
 <h4>BM: <%="#{@bm.firstname} #{@bm.lastname}"%></h4>
+<div id="weekly">
 <%= render :partial => 'layouts/weekly' %>
+</div>
