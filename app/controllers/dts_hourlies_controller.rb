@@ -449,10 +449,13 @@ class DtsHourliesController < ApplicationController
               @dtshourly.save
             end
           end
+          flash[:success] = "Fetch successful"
+          render js: "window.location = '/store?tab=weekly&year=#{@date.to_date.year}&week=#{@date.to_date.cweek}'"
+        else
+          flash[:error] = "Fetch was not succesful. Check the dates."
+          render js: "window.location = '/store?tab=weekly&year=#{@date.to_date.year}&week=#{@date.to_date.cweek}'"
         end
     end
-    flash[:success] = "Fetch successful"
-    render js: "window.location = '/store?year=#{@date.to_date.year}&week=#{@date.to_date.cweek}'"
     end
   
   def dts_hourlies_live

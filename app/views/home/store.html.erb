@@ -1,6 +1,78 @@
 <%= flash_messages %>
 <h2>Store ID <%=current_person.store%></h2>
-<h4>BM: <%="#{@bm.firstname} #{@bm.lastname}"%></h4>
-<div id="weekly">
-<%= render :partial => 'layouts/weekly' %>
+<h5><i>BM: <%="#{@bm.firstname} #{@bm.lastname}"%></i></h5></br>
+<ul class="nav nav-pills">
+
+  <li role="presentation" <% if (params[:tab] == "weekly" || params[:tab] == nil) %>class="active"<% end %>><a id="weekly_btn" href="">Weekly</a>
+  <li role="presentation" <% if params[:tab] == "schedule" %>class="active"<% end %>><a id="schedule_btn" href="">Schedule</a></li>
+</ul></br>
+<h3><%= link_to 'Previous week', '', :class => 'btn btn-default', :id => 'prev_btn'%>
+Week <%=@wn%>
+<%= link_to 'Next week', '', :class => 'btn btn-default', :id => 'next_btn'%></h3>
+<div id="schedule">
+<%= render :partial => 'layouts/schedule' if (params[:tab] != nil && (params[:tab] == "schedule" || params[:tab] == "all")) %>
 </div>
+<div id="weekly">
+<%= render :partial => 'layouts/weekly' if (params[:tab] == nil || (params[:tab] == "weekly" || params[:tab] == "all")) %>
+</div>
+
+<script>
+function getParameterByName(name, url) {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
+appendToQueryString = function (param, val) {
+    var queryString = window.location.search.replace("?", "");
+    var parameterListRaw = queryString == "" ? [] : queryString.split("&");
+    var parameterList = {};
+    for (var i = 0; i < parameterListRaw.length; i++) {
+        var parameter = parameterListRaw[i].split("=");
+        parameterList[parameter[0]] = parameter[1];
+    }
+    parameterList[param] = val;
+
+    var newQueryString = "?";
+    for (var item in parameterList) {
+        if (parameterList.hasOwnProperty(item)) {
+            newQueryString += item + "=" + parameterList[item] + "&";
+        }
+    }
+    newQueryString = newQueryString.replace(/&$/, "");
+    return location.origin + location.pathname + newQueryString;
+}
+$(document).ready(function() {
+    $( "#schedule_btn" ).click(function(e) {
+        e.preventDefault();
+        location.href = appendToQueryString("tab", "schedule");
+    });
+    $( "#weekly_btn" ).click(function(e) {
+        e.preventDefault();
+        location.href = appendToQueryString("tab", "weekly");
+    });
+    $( "#next_btn" ).click(function(e) {
+        e.preventDefault();
+        var currweek = parseInt(getParameterByName("week"));
+        var curryear = parseInt(getParameterByName("year"));
+        if (isNaN(currweek)) {
+            currweek = <%= @wn.to_i %>;
+        }
+        var nextweek = currweek+1;
+        location.href = appendToQueryString("week", nextweek);
+    });
+    $( "#prev_btn" ).click(function(e) {
+        e.preventDefault();
+        var currweek = parseInt(getParameterByName("week"));
+        var curryear = parseInt(getParameterByName("year"));
+        if (isNaN(currweek)) {
+            currweek = <%= @wn.to_i %>;
+        }
+        var prevweek = currweek-1;
+        location.href = appendToQueryString("week", prevweek);
+    });
+});
+</script>

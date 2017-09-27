@@ -1,0 +1,43 @@
+<p><h4>Schedule</h4>(<%=@begin%> - <%=@end%>)</p>
+</br>
+<div class="alert alert-danger" role="alert">
+  <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span></span>This page will NOT save any data entered yet.
+</div>
+<table class="table table-bordered table-responsive" style="width: 1000px;">
+    <thead>
+        <tr>
+            <th style="vertical-align: middle; text-align: center;">Week #</th>
+            <th style="vertical-align: middle; ">Monday</th>
+            <th style="vertical-align: middle; ">Tuesday</th>
+            <th style="vertical-align: middle; ">Wednesday</th>
+            <th style="vertical-align: middle; ">Thursday</th>
+            <th style="vertical-align: middle; ">Friday</th>
+            <th style="vertical-align: middle; ">Saturday</th>
+            <th style="vertical-align: middle; ">Sunday</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr style="height: 150px;">
+        <td style="vertical-align: middle; text-align: center;">Week <%=@wn%></td>
+            <% @week.each do |day| %>
+              <td style="padding: 0px;"><table style="margin: 0px;" class="table table-responsive">
+                <tr>
+                    <td><%=day%></td>
+                </tr>
+                <tr>
+                    <td>Overnight</br><%= select_tag "names", options_for_select(@names.collect {|p| [ "#{p['firstname']} #{p['lastname'][0]}", p['nameid'] ] }, 0)%></td>
+                </tr>
+                <tr>
+                    <td>Open</br><%= select_tag "names", options_for_select(@names.collect {|p| [ "#{p['firstname']} #{p['lastname'][0]}", p['nameid'] ] }, 0)%></td>
+                </tr>
+                <tr>
+                    <td>Dayshift</br><%= select_tag "names", options_for_select(@names.collect {|p| [ "#{p['firstname']} #{p['lastname'][0]}", p['nameid'] ] }, 0)%></td>
+                </tr>
+                <tr>
+                    <td>Evening</br><%= select_tag "names", options_for_select(@names.collect {|p| [ "#{p['firstname']} #{p['lastname'][0]}", p['nameid'] ] }, 0)%></td>
+                </tr>
+                </table></td>
+            <% end %>
+        </tr>
+    </tbody>
+</table>

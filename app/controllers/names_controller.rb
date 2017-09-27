@@ -32,10 +32,10 @@ class NamesController < ApplicationController
   # POST /names.json
   def create
     @name = Name.new(name_params)
-
+    
     respond_to do |format|
       if @name.save
-        format.html { redirect_to @name, notice: 'Name was successfully created.' }
+        format.html { redirect_to names_url, notice: 'Name was successfully created.' }
         format.json { render :show, status: :created, location: @name }
       else
         format.html { render :new }

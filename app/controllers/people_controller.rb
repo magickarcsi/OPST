@@ -83,6 +83,10 @@ end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def person_params
+      nam = Name.find_by(store: params['person']['store'], firstname: params['person']['firstname'], lastname: params['person']['lastname'])
+      if nam != nil
+        params['person']['nameid'] = nam.nameid.to_s
+      end
       params.require(:person).permit(:id, :firstname, :lastname, :email, :password, :store, :nameid, :enabled, :active, :admin, :position)
     end
 end

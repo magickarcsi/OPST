@@ -1,4 +1,4 @@
-<h4>Results for Week <%=@wn%> (<%=@begin%> - <%=@end%>)</h4>
+<p><h4>Weekly results</h4>(<%=@begin%> - <%=@end%>)</p>
 <strong>Average AST: </strong> <%=@ast%>
 <strong>Average OEPE: </strong><%=@oepe%>
 <strong>Total cars: </strong><%=@cars%> </br></br>
@@ -11,22 +11,28 @@
             <th>OEPE</th>
             <th>AST</th>
             <th>Cars</th>
+            <th>Action</th>
         </tr>
     </thead>
     <tbody>
-    <% @result.each do |hour| %>
+    <% @result.each_with_index do |hour,index| %>
         <tr>
             <td><%= hour[0] %></td>
             <% if hour[1] == 4 %>
-                <td colspan="4"><%= @dayparts[hour[1]] %></td>
-                <td><%= link_to "Fetch now?", "/dts/fetch?date=#{hour[0]}", class: "btn btn-success btn-xs", remote: true, data: {disable_with: "Loading..." } %></td>
+                <td colspan="5"><%= @dayparts[hour[1]] %></td>
+                <td><%= link_to "Fetch now!", "/dts/fetch?date=#{hour[0]}", class: "btn btn-success btn-xs", remote: true, data: {disable_with: "Loading..." } %></td>
             <% else %>
                 <td><%= @dayparts[hour[1]] %></td>
                 <td><%= hour[2] %></td>
                 <td><%= hour[3] %></td>
                 <td><%= hour[4] %></td>
                 <td><%= hour[5] %></td>
-            <% end %>            
+                
+                <% if (hour[1] == 1)%>
+                  <td><%= link_to "Fetch again?", "/dts/fetch?date=#{hour[0]}", class: "btn btn-warning btn-xs", remote: true, data: {disable_with: "Loading..." } %></td>
+                <% end %>
+                
+                <% end %>            
         </tr>
     <% end %>
     </tbody>

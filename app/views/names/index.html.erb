@@ -2,6 +2,7 @@
 <div class="page-header">
   <h1><%=t '.title', :default => model_class.model_name.human.pluralize.titleize %></h1>
 </div>
+<%= flash_messages %>
 <table class="table table-hover table-responsive" style="font-size: small;">
   <thead>
     <tr>
@@ -84,13 +85,6 @@
                       :disable_with => "Loading...",
                       :class => 'bg-danger text-black' %>  
                 </li>
-                <li><%= link_to t('.generate_new_password_email', :default => t("helpers.links.resetpassword")),
-                      name_path(@name),
-                      :method => :delete,
-                      :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => "Are you sure you want to delete #{@name.firstname}, #{@name.lastname}?")) },
-                      :disable_with => "Loading...",
-                      :class => 'bg-warning text-black' %>  
-                </li>
                 <% end %>
             </ul>
           </div>
@@ -105,5 +99,8 @@
 <% if current_person.try(:admin?) %>
 <%= link_to t('.new', :default => t("helpers.links.new")),
             new_name_path,
+            :remote => true,
             :class => 'btn btn-default' %>
-<% end %>
+<% end %></br>
+<div id="formfor" style="width: 500px;">
+</div>
