@@ -275,7 +275,7 @@ class DtsHourliesController < ApplicationController
           dat = @response["averageValues"]
           averages = Hash[]
           dat.each do |key, value|
-            value.collect {|k,v| [averages[key] = k.to_i, averages["TAR_#{key}"] = v] }
+            averages[key] = value
           end
           @dtsday = DtsDaily.new(date: @date, COD1: averages["COD 1"].to_i, COD2: averages["COD 2"].to_i, HHOT: averages["HHOT"].to_i, Cashier: averages["Cashier"].to_i, Presenter: averages["Presenter"].to_i, OEPE: averages["OE-PE"].to_i, AST: averages["AST"].to_i, TAR_COD1: averages["TAR_COD 1"].to_i, TAR_COD2: averages["TAR_COD 2"].to_i, TAR_HHOT: averages["TAR_HHOT"].to_i, TAR_Cashier: averages["TAR_Cashier"].to_i, TAR_Presenter: averages["TAR_Presenter"].to_i, TAR_OEPE: averages["TAR_OE-PE"].to_i, TAR_AST: averages["TAR_AST"].to_i, datestring: @date.to_date, storeId: @storeid.to_s)
           if (DtsDaily.find_by(datestring: @date.to_date.to_s, storeId: @storeid.to_s) == nil)
@@ -304,7 +304,7 @@ class DtsHourliesController < ApplicationController
           dat = JSON.parse(@response["averageValues"])
           averages = Hash[]
           dat.each do |key, value|
-            value.collect {|k,v| [averages[key] = k.to_i, averages["TAR_#{key}"] = v] }
+            averages[key] = value
           end
           @dtsday = DtsDaily.new(date: @date, COD1: averages["COD 1"].to_i, COD2: averages["COD 2"].to_i, HHOT: averages["HHOT"].to_i, Cashier: averages["Cashier"].to_i, Presenter: averages["Presenter"].to_i, OEPE: averages["OE-PE"].to_i, AST: averages["AST"].to_i, TAR_COD1: averages["TAR_COD 1"].to_i, TAR_COD2: averages["TAR_COD 2"].to_i, TAR_HHOT: averages["TAR_HHOT"].to_i, TAR_Cashier: averages["TAR_Cashier"].to_i, TAR_Presenter: averages["TAR_Presenter"].to_i, TAR_OEPE: averages["TAR_OE-PE"].to_i, TAR_AST: averages["TAR_AST"].to_i, datestring: @date.to_date, storeId: @storeid.to_s)
           if (DtsDaily.find_by(datestring: @date.to_date.to_s, storeId: @storeid.to_s) == nil)
@@ -335,7 +335,7 @@ class DtsHourliesController < ApplicationController
           dat = JSON.parse(@response["averageValues"])
           averages = Hash[]
           dat.each do |key, value|
-            value.collect {|k,v| [averages[key] = k.to_i, averages["TAR_#{key}"] = v] }
+            averages[key] = value
           end
           @dtsday = DtsDaily.new(date: @date, COD1: averages["COD 1"].to_i, COD2: averages["COD 2"].to_i, HHOT: averages["HHOT"].to_i, Cashier: averages["Cashier"].to_i, Presenter: averages["Presenter"].to_i, OEPE: averages["OE-PE"].to_i, AST: averages["AST"].to_i, TAR_COD1: averages["TAR_COD 1"].to_i, TAR_COD2: averages["TAR_COD 2"].to_i, TAR_HHOT: averages["TAR_HHOT"].to_i, TAR_Cashier: averages["TAR_Cashier"].to_i, TAR_Presenter: averages["TAR_Presenter"].to_i, TAR_OEPE: averages["TAR_OE-PE"].to_i, TAR_AST: averages["TAR_AST"].to_i, datestring: @date.to_date, storeId: @storeid.to_s)
           if (DtsDaily.find_by(datestring: @date.to_date.to_s, storeId: @storeid.to_s) == nil)
@@ -364,7 +364,7 @@ class DtsHourliesController < ApplicationController
           dat = JSON.parse(@response["averageValues"])
           averages = Hash[]
           dat.each do |key, value|
-            value.collect {|k,v| [averages[key] = k.to_i, averages["TAR_#{key}"] = v] }
+            averages[key] = value
           end
           @dtsday = DtsDaily.new(date: @date, COD1: averages["COD 1"].to_i, COD2: averages["COD 2"].to_i, HHOT: averages["HHOT"].to_i, Cashier: averages["Cashier"].to_i, Presenter: averages["Presenter"].to_i, OEPE: averages["OE-PE"].to_i, AST: averages["AST"].to_i, TAR_COD1: averages["TAR_COD 1"].to_i, TAR_COD2: averages["TAR_COD 2"].to_i, TAR_HHOT: averages["TAR_HHOT"].to_i, TAR_Cashier: averages["TAR_Cashier"].to_i, TAR_Presenter: averages["TAR_Presenter"].to_i, TAR_OEPE: averages["TAR_OE-PE"].to_i, TAR_AST: averages["TAR_AST"].to_i, datestring: @date.to_date, storeId: @storeid.to_s)
           if (DtsDaily.find_by(datestring: @date.to_date.to_s, storeId: @storeid.to_s) == nil)
@@ -415,7 +415,7 @@ class DtsHourliesController < ApplicationController
               dat = @response["averageValues"]
               averages = Hash[]
               dat.each do |key, value|
-                value.collect {|k,v| [averages[key] = k.to_i, averages["TAR_#{key}"] = v] }
+                averages[key] = value
               end
               @dtsday = DtsDaily.new(date: @date, COD1: averages["COD 1"].to_i, COD2: averages["COD 2"].to_i, HHOT: averages["HHOT"].to_i, Cashier: averages["Cashier"].to_i, Presenter: averages["Presenter"].to_i, OEPE: averages["OE-PE"].to_i, AST: averages["AST"].to_i, TAR_COD1: averages["TAR_COD 1"].to_i, TAR_COD2: averages["TAR_COD 2"].to_i, TAR_HHOT: averages["TAR_HHOT"].to_i, TAR_Cashier: averages["TAR_Cashier"].to_i, TAR_Presenter: averages["TAR_Presenter"].to_i, TAR_OEPE: averages["TAR_OE-PE"].to_i, TAR_AST: averages["TAR_AST"].to_i, datestring: @date.to_date, storeId: @storeid.to_s)
               if (DtsDaily.find_by(datestring: @date.to_date.to_s, storeId: @storeid.to_s) == nil)
