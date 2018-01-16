@@ -2,6 +2,9 @@
 <div class="page-header">
   <h1><%=t '.title', :default => model_class.model_name.human.pluralize.titleize %></h1>
 </div>
+<div id="formfor" style="width: 500px;">
+
+</div>
 <table class="table table-hover table-responsive" style="font-size: small;">
   <thead>
     <tr>
@@ -37,7 +40,8 @@
                 <li><%= link_to t('.show', :default => t("helpers.links.show")),
                       person_path(person) %></li>
                 <li><%= link_to t('.edit', :default => t("helpers.links.edit")),
-                      edit_person_path(person) %></li>
+                      edit_person_path(person),
+                      :remote => true %></li>
                 
                 <li role="separator" class="divider"></li>
                 <li><%= link_to t('.destroy', :default => t("helpers.links.destroy")),
@@ -77,7 +81,8 @@
                 <li><%= link_to t('.show', :default => t("helpers.links.show")),
                       person_path(@person) %></li>
                 <li><%= link_to t('.edit', :default => t("helpers.links.edit")),
-                      edit_person_path(@person) %></li>
+                      edit_person_path(@person),
+                      :remote => true %></li>
                 <% if current_person.try(:admin?) %>
                 <li role="separator" class="divider"></li>
                 <li><%= link_to t('.destroy', :default => t("helpers.links.destroy")),
@@ -108,5 +113,6 @@
 <% if current_person.try(:admin?) %>
 <%= link_to t('.new', :default => t("helpers.links.new")),
             new_person_path,
+            :remote => true,
             :class => 'btn btn-default' %>
 <% end %>

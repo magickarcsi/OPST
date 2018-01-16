@@ -49,7 +49,7 @@ class NamesController < ApplicationController
   def update
     respond_to do |format|
       if @name.update(name_params)
-        format.html { redirect_to @name, notice: 'Name was successfully updated.' }
+        format.html { redirect_to names_url, notice: 'Name was successfully updated.' }
         format.json { render :show, status: :ok, location: @name }
       else
         format.html { render :edit }

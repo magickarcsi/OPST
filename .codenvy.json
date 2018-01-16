@@ -1,0 +1,107 @@
+{
+  "v": "4.0",
+  "name": "Rails",
+  "workspace": {
+    "defaultEnv": "rails-ws",
+    "environments": [
+      {
+        "name": "rails-ws",
+        "machineConfigs": [
+          {
+            "limits": {
+              "ram": 2000
+            },
+            "name": "ws-machine",
+            "type": "docker",
+            "source": {
+              "location": "http://beta.codenvy.com/api/recipe/recipev80g6iir5hxg06bl/script",
+              "type": "dockerfile"
+            },
+            "dev": true,
+            "servers": [],
+            "envVariables": {},
+            "links": []
+          }
+        ]
+      }
+    ],
+    "projects": [
+      {
+        "links": [],
+        "name": "web-rails-simple",
+        "attributes": {
+          "vcs.provider.name": [
+            "git"
+          ],
+          "git.current.branch.name": [
+            "master"
+          ],
+          "contribute_to_branch": [
+            "master"
+          ],
+          "git.repository.remotes": [
+            "https://github.com/che-samples/web-rails-simple.git"
+          ]
+        },
+        "type": "blank",
+        "source": {
+          "location": "https://github.com/che-samples/web-rails-simple.git",
+          "type": "git",
+          "parameters": {}
+        },
+        "path": "/web-rails-simple",
+        "problems": [],
+        "mixins": [
+          "pullrequest",
+          "git"
+        ]
+      }
+    ],
+    "name": "ruby-rails",
+    "commands": [
+      {
+        "commandLine": "cd ${current.project.path} && sudo bundle install",
+        "name": "install-dep",
+        "attributes": {
+          "previewUrl": ""
+        },
+        "type": "custom"
+      },
+      {
+        "commandLine": "cd ${current.project.path} && sudo rails server -b 0.0.0.0",
+        "name": "run",
+        "attributes": {
+          "previewUrl": "http://${server.port.3000}"
+        },
+        "type": "custom"
+      },
+      {
+        "commandLine": "cd ${current.project.path} && bundle install && rails server -b 0.0.0.0",
+        "name": "build-n-run",
+        "attributes": {
+          "previewUrl": "http://${server.port.3000}"
+        },
+        "type": "custom"
+      }
+    ],
+    "links": []
+  },
+  "ide": {
+    "onProjectsLoaded": {
+      "actions": [
+        {
+          "properties": {
+            "name": "build-n-run"
+          },
+          "id": "runCommand"
+        },
+        {
+          "properties": {
+            "file": "/web-rails-simple/Gemfile"
+          },
+          "id": "openFile"
+        }
+      ]
+    }
+  }
+}

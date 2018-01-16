@@ -112,8 +112,8 @@ class DtsHourliesController < ApplicationController
     end  
     @return = array
     if ((@daypart_arr[1]-@daypart_arr[0]+1) != 0)
-      @avg_ast /= (@daypart_arr[1]-@daypart_arr[0]+1)
-      @avg_oepe /= (@daypart_arr[1]-@daypart_arr[0]+1)
+      @avg_ast = @ast / (@daypart_arr[1]-@daypart_arr[0]+1)
+      @avg_oepe = @oepe / (@daypart_arr[1]-@daypart_arr[0]+1)
     else
       @avg_ast = 0
       @avg_oepe = 0
